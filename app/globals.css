@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /*
+   * Avoid @apply for custom theme colors here: PostCSS can fail to resolve them
+   * if this file is processed before Tailwind sees all sources, which breaks the whole CSS bundle.
+   * Values mirror tailwind.config.ts (matte, ink, gold).
+   */
+  html {
+    background-color: #fafafa;
+    color: #000000;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background-color: rgba(212, 175, 55, 0.38);
+    color: #000000;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hero headline: scrim carries contrast; shadows stay tight and premium */
+  .text-hero-headline {
+    color: #fefefe;
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.78),
+      0 6px 22px rgba(0, 0, 0, 0.45),
+      0 1px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  .text-hero-dek {
+    color: rgba(255, 255, 255, 0.96);
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.55),
+      0 4px 16px rgba(0, 0, 0, 0.35);
+  }
+
+  .text-hero-kicker {
+    color: #f0dc82;
+    text-shadow:
+      0 0 22px rgba(240, 220, 130, 0.45),
+      0 1px 2px rgba(0, 0, 0, 0.75);
+  }
+}
