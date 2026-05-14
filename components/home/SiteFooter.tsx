@@ -25,8 +25,8 @@ export function SiteFooter() {
             />
           </div>
           <p className="mt-4 max-w-md text-xs font-medium leading-relaxed text-white/[0.72]">
-            CourtVision AI surfaces trustworthy basketball context for youth programs. GEYBL coverage on this page is
-            illustrative until your production data and assets are connected.
+            CourtVision AI delivers live analytics, leaderboards, scouting insights, and editorial coverage for the next
+            generation of basketball.
           </p>
         </div>
         <div className="shrink-0 text-sm font-medium text-white/[0.78] sm:text-right">
