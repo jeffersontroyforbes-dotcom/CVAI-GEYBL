@@ -16,6 +16,7 @@ const matchups: MatchupPreview[] = [
     venue: "Court 41",
     a: { name: "Philadelphia Rise JR 14", tag: "RISE" },
     b: { name: "All Ohio Red JR 14", tag: "OH RED" },
+    why: "Philadelphia Rise and All Ohio Red bring one of the most talent-rich guard matchups of the opening slate. Ayla Cromedy headlines a Rise group built on pace, pressure, and transition scoring, while Nylah Quattlebaum and Mia Lawson give All Ohio Red multiple creators capable of controlling tempo late in possessions. Reign Harris adds another high-motor presence expected to impact both ends of the floor.",
     featured: ["Ayla Cromedy", "Nylah Quattlebaum", "Mia Lawson", "Reign Harris"],
   },
   {
@@ -51,65 +52,72 @@ export function MatchupPreviews() {
         </span>
       </div>
       <div className="flex flex-col gap-5">
-        {matchups.map((g) => (
-          <article
-            key={`${g.when}-${g.a.name}`}
-            className="overflow-hidden rounded-2xl border border-black/[0.1] bg-paper shadow-lift ring-1 ring-black/[0.04]"
-          >
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/[0.07] bg-gradient-to-r from-panel to-paper px-4 py-3 text-xs text-muted sm:px-5">
-              <span className="font-semibold tracking-wide text-ink">{g.when}</span>
-              <span className="text-[11px] font-medium tracking-wide text-muted">{g.venue}</span>
+        {matchups.map((g) => {
+          const whySection = g.why ? (
+            <div className="border-t border-black/[0.06] pt-4">
+              <p className="font-headline text-[10px] font-bold uppercase tracking-[0.28em] text-gold-deep sm:text-[11px] sm:tracking-[0.3em]">
+                Why we&apos;re watching
+              </p>
+              <p className="mt-2 text-sm font-medium leading-relaxed text-muted sm:text-[0.95rem]">{g.why}</p>
             </div>
-            <div className="grid gap-4 p-4 sm:gap-5 sm:p-5">
-              <div className="flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center sm:gap-3">
-                <div className="min-w-0 flex-1 text-center sm:text-left">
-                  <p className="text-[10px] font-semibold tracking-[0.25em] text-dim">{g.a.tag}</p>
-                  <p className="break-words font-headline text-base font-bold leading-snug tracking-tight text-ink sm:text-lg">
-                    {g.a.name}
-                  </p>
-                </div>
-                <span className="mx-auto flex shrink-0 items-center justify-center rounded-full border border-gold/30 bg-ink px-3 py-1.5 text-[10px] font-headline tracking-[0.2em] text-gold-bright shadow-glowGoldSoft sm:mx-0">
-                  VS
-                </span>
-                <div className="min-w-0 flex-1 text-center sm:text-right">
-                  <p className="text-[10px] font-semibold tracking-[0.25em] text-dim">{g.b.tag}</p>
-                  <p className="break-words font-headline text-base font-bold leading-snug tracking-tight text-ink sm:text-lg">
-                    {g.b.name}
-                  </p>
-                </div>
-              </div>
+          ) : null;
 
-              {g.why ? (
-                <div className="border-t border-black/[0.06] pt-4">
-                  <p className="font-headline text-[10px] font-bold uppercase tracking-[0.28em] text-gold-deep sm:text-[11px] sm:tracking-[0.3em]">
-                    Why we&apos;re watching
-                  </p>
-                  <p className="mt-2 text-sm font-medium leading-relaxed text-muted sm:text-[0.95rem]">{g.why}</p>
-                </div>
-              ) : null}
-
-              <div className="border-t border-black/[0.06] pt-4">
-                <p className="font-headline text-[10px] font-bold uppercase tracking-[0.28em] text-ink sm:text-[11px] sm:tracking-[0.3em]">
-                  Featured players
-                </p>
-                <ul className="mt-3 space-y-2.5">
-                  {g.featured.map((name) => (
-                    <li
-                      key={`${g.when}-${name}`}
-                      className="flex items-start gap-2.5 font-headline text-sm font-semibold tracking-tight text-ink sm:text-[0.9375rem]"
-                    >
-                      <span
-                        className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold ring-2 ring-gold/35"
-                        aria-hidden
-                      />
-                      <span>{name}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          const featuredSection = (
+            <div className="border-t border-black/[0.06] pt-4">
+              <p className="font-headline text-[10px] font-bold uppercase tracking-[0.28em] text-ink sm:text-[11px] sm:tracking-[0.3em]">
+                Featured players
+              </p>
+              <ul className="mt-3 space-y-2.5">
+                {g.featured.map((name) => (
+                  <li
+                    key={`${g.when}-${name}`}
+                    className="flex items-start gap-2.5 font-headline text-sm font-semibold tracking-tight text-ink sm:text-[0.9375rem]"
+                  >
+                    <span
+                      className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold ring-2 ring-gold/35"
+                      aria-hidden
+                    />
+                    <span>{name}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </article>
-        ))}
+          );
+
+          return (
+            <article
+              key={`${g.when}-${g.a.name}`}
+              className="overflow-hidden rounded-2xl border border-black/[0.1] bg-paper shadow-lift ring-1 ring-black/[0.04]"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/[0.07] bg-gradient-to-r from-panel to-paper px-4 py-3 text-xs text-muted sm:px-5">
+                <span className="font-semibold tracking-wide text-ink">{g.when}</span>
+                <span className="text-[11px] font-medium tracking-wide text-muted">{g.venue}</span>
+              </div>
+              <div className="grid gap-4 p-4 sm:gap-5 sm:p-5">
+                <div className="flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center sm:gap-3">
+                  <div className="min-w-0 flex-1 text-center sm:text-left">
+                    <p className="text-[10px] font-semibold tracking-[0.25em] text-dim">{g.a.tag}</p>
+                    <p className="break-words font-headline text-base font-bold leading-snug tracking-tight text-ink sm:text-lg">
+                      {g.a.name}
+                    </p>
+                  </div>
+                  <span className="mx-auto flex shrink-0 items-center justify-center rounded-full border border-gold/30 bg-ink px-3 py-1.5 text-[10px] font-headline tracking-[0.2em] text-gold-bright shadow-glowGoldSoft sm:mx-0">
+                    VS
+                  </span>
+                  <div className="min-w-0 flex-1 text-center sm:text-right">
+                    <p className="text-[10px] font-semibold tracking-[0.25em] text-dim">{g.b.tag}</p>
+                    <p className="break-words font-headline text-base font-bold leading-snug tracking-tight text-ink sm:text-lg">
+                      {g.b.name}
+                    </p>
+                  </div>
+                </div>
+
+                {whySection}
+                {featuredSection}
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
