@@ -34,10 +34,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${oswald.variable}`}>
-      <body className="min-h-dvh overflow-x-clip bg-matte font-sans text-ink">
+      <head>
         <EmbedDetect />
-        {children}
-      </body>
+      </head>
+      <body className="min-h-dvh overflow-x-clip bg-matte font-sans text-ink">{children}</body>
     </html>
   );
 }

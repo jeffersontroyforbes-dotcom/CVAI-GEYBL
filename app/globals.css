@@ -28,10 +28,14 @@
     box-sizing: border-box;
   }
 
-  /* Nike / GEYBL iframe: single scroll surface, no nested sticky chrome */
+  /*
+   * Nike / GEYBL iframe: content-only surface (no site chrome).
+   * Standalone pages ignore these rules unless data-embed is set.
+   */
   html[data-embed="true"] {
     overflow-x: clip;
     height: auto;
+    background-color: transparent;
   }
 
   html[data-embed="true"] body {
@@ -39,23 +43,61 @@
     height: auto;
     overflow-x: clip;
     overflow-y: visible;
-    overscroll-behavior-y: none;
+    overscroll-behavior: none;
+    background-color: transparent;
   }
 
   html[data-embed="true"] .site-chrome {
-    position: static;
-    z-index: auto;
-    box-shadow: none;
+    display: none;
   }
 
-  html[data-embed="true"] .stats-subnav {
-    box-shadow: 0 2px 10px -6px rgba(0, 0, 0, 0.1);
+  html[data-embed="true"] .page-shell {
+    padding-top: 0;
+    padding-bottom: 1rem;
   }
 
-  html[data-embed="true"] .stats-subnav-inner {
-    min-height: 2.5rem;
+  html[data-embed="true"] .page-shell > main {
+    min-width: 0;
+  }
+
+  html[data-embed="true"] #hub {
+    max-width: none;
+    width: 100%;
+    margin-inline: 0;
+    padding: 0;
+  }
+
+  html[data-embed="true"] #hub a {
+    border-radius: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    --tw-ring-offset-color: transparent;
+  }
+
+  html[data-embed="true"] .page-shell > main > section {
+    max-width: none;
+    width: 100%;
+    margin-inline: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: 1.25rem;
+  }
+
+  html[data-embed="true"] .page-shell > main > section:first-of-type {
+    padding-top: 0.25rem;
+  }
+
+  html[data-embed="true"] .page-shell > footer {
+    margin-top: 0.5rem;
+  }
+
+  html[data-embed="true"] .page-shell > footer > div {
+    max-width: none;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
   ::selection {
     background-color: rgba(212, 175, 55, 0.38);
