@@ -123,8 +123,8 @@ const teamSections: TeamSection[] = [
 
 export default function PlayersToWatchNotebookPage() {
   return (
-    <div className="pb-12 sm:pb-14">
-      <div className="sticky top-0 z-50 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.35)]">
+    <div className="page-shell min-w-0 overflow-x-clip pb-12 sm:pb-14">
+      <div className="site-chrome sticky top-0 z-50 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.35)]">
         <SiteHeader />
         <StatsSubnav />
       </div>

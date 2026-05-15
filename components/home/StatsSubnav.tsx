@@ -9,10 +9,10 @@ export function StatsSubnav() {
   return (
     <nav
       aria-label="Stats navigation"
-      className="relative z-40 border-b border-black/[0.07] bg-white shadow-[0_4px_14px_-8px_rgba(0,0,0,0.12)]"
+      className="stats-subnav relative z-40 border-b border-black/[0.07] bg-white shadow-[0_4px_14px_-8px_rgba(0,0,0,0.12)]"
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-5">
-        <div className="scrollbar-none flex min-h-[2.85rem] w-full min-w-0 flex-nowrap items-center justify-between gap-2 overflow-x-auto py-2.5 sm:min-h-[2.75rem] sm:justify-start sm:gap-5 sm:py-2.5">
+      <div className="mx-auto max-w-6xl min-w-0 px-4 sm:px-5">
+        <div className="stats-subnav-inner scrollbar-none flex min-h-[2.85rem] w-full min-w-0 flex-nowrap items-center justify-between gap-2 overflow-x-auto overscroll-x-contain py-2.5 sm:min-h-[2.75rem] sm:justify-start sm:gap-5 sm:py-2.5">
           {links.map((l) => (
             <a
               key={l.label}

@@ -13,6 +13,49 @@
     color: #000000;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  body {
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* Nike / GEYBL iframe: single scroll surface, no nested sticky chrome */
+  html[data-embed="true"] {
+    overflow-x: clip;
+    height: auto;
+  }
+
+  html[data-embed="true"] body {
+    min-height: 0;
+    height: auto;
+    overflow-x: clip;
+    overflow-y: visible;
+    overscroll-behavior-y: none;
+  }
+
+  html[data-embed="true"] .site-chrome {
+    position: static;
+    z-index: auto;
+    box-shadow: none;
+  }
+
+  html[data-embed="true"] .stats-subnav {
+    box-shadow: 0 2px 10px -6px rgba(0, 0, 0, 0.1);
+  }
+
+  html[data-embed="true"] .stats-subnav-inner {
+    min-height: 2.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
   ::selection {
     background-color: rgba(212, 175, 55, 0.38);
