@@ -17,10 +17,10 @@ export default function HomePage() {
       </div>
       <main>
         <HeroArticle />
-        <LiveLeadersSection />
         <MatchupPreviews />
         <ArticleGrid />
         <ReportLinks />
+        <LiveLeadersSection />
         <ContactSection />
       </main>
       <SiteFooter />

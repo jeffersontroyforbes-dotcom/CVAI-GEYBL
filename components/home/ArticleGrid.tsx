@@ -1,31 +1,6 @@
 /* eslint-disable @next/next/no-img-element -- static /public assets */
 import Link from "next/link";
-
-type NotebookItem = {
-  title: string;
-  meta: string;
-  href: string;
-  /** When set, shows image thumbnail; otherwise placeholder tile. */
-  imageSrc?: string;
-  imageAlt?: string;
-};
-
-const items: NotebookItem[] = [
-  {
-    title: "The Future of 14U Basketball Has Arrived",
-    meta: "Feature · 8 min read",
-    href: "/articles/future-of-14u",
-    imageSrc: "/hero-cvai-14u.png",
-    imageAlt: "CVAI × 14U GEYBL — feature art",
-  },
-  {
-    title: "Players To Watch",
-    meta: "Notebook · Scouting",
-    href: "/articles/14u-notebook-players-to-watch",
-    imageSrc: "/hero-players-to-watch.png",
-    imageAlt: "Players to watch — Next up, catch all the action",
-  },
-];
+import { notebookItems, type NotebookItem } from "./notebookItems";
 
 function ArticleThumb({ imageSrc, imageAlt }: Pick<NotebookItem, "imageSrc" | "imageAlt">) {
   if (imageSrc) {
@@ -66,7 +41,7 @@ export function ArticleGrid() {
         </a>
       </div>
       <div className="grid grid-cols-1 gap-4">
-        {items.map((it) => (
+        {notebookItems.map((it) => (
           <Link
             key={it.title}
             href={it.href}
