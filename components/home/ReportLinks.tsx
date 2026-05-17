@@ -4,7 +4,11 @@ const reports = [
     href: "/CVAI_Friday_Recap_Scouting_Report.pdf",
     download: "CVAI_Friday_Recap_Scouting_Report.pdf",
   },
-  { title: "NOLA Saturday Recap" },
+  {
+    title: "NOLA Saturday Recap",
+    href: "/CVAI_Saturday_Notebook_Scouting_Report.pdf",
+    download: "CVAI_Saturday_Notebook_Scouting_Report.pdf",
+  },
   { title: "NOLA Sunday Recap" },
 ];
 

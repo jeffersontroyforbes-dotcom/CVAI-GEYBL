@@ -8,6 +8,13 @@ export type NotebookItem = {
 
 export const notebookItems: NotebookItem[] = [
   {
+    title: "Saturday Notebook: Shooters Shine Across Jr. EYBL Opening Day",
+    meta: "Notebook · Saturday Takeaways",
+    href: "/articles/saturday-notebook-shooters-shine",
+    imageSrc: "/saturday-takeaways-new-orleans-session-2.png",
+    imageAlt: "Saturday Takeaways — Nike Girls EYBL 14U New Orleans Session 2",
+  },
+  {
     title: "Friday Takeaways: New Orleans Session 2",
     meta: "Notebook · Friday Takeaways",
     href: "/articles/friday-takeaways-new-orleans-session-2",

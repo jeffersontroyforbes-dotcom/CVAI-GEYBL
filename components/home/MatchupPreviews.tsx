@@ -5,6 +5,7 @@ type FeaturedPlayer = {
 
 type MatchupPreview = {
   when: string;
+  stage: string;
   venue: string;
   a: { name: string; tag: string };
   b: { name: string; tag: string };
@@ -15,36 +16,42 @@ type MatchupPreview = {
 
 const matchups: MatchupPreview[] = [
   {
-    when: "Saturday · 1:30 PM CDT",
-    venue: "Court 45",
-    a: { name: "Team Takeover JR 14", tag: "TAKEOVER" },
-    b: { name: "Cal Storm - Team Taurasi JR 14", tag: "TAURASI" },
-    why: "This matchup feels like a future Platinum bracket preview. Team Takeover brings relentless downhill pressure and athleticism, while Team Taurasi counters with spacing, pace, and confident perimeter shot-making. With multiple impact guards on the floor, this game has the potential to become one of the fastest and most entertaining battles of the day.",
+    when: "Sunday · 9:45 AM CDT",
+    stage: "Platinum Bracket",
+    venue: "Court 40",
+    a: { name: "AL Southern Starz", tag: "STARZ" },
+    b: { name: "MOKAN", tag: "MOKAN" },
+    why: "Two of the hottest offensive teams entering Sunday collide early in one of the strongest matchups of bracket play. AL Southern Starz continues to generate elite scoring production behind dynamic shot creation and transition pace, while MOKAN has consistently answered with perimeter shooting and offensive balance throughout the weekend. High-level guard play, multiple breakout scorers, and major offensive firepower could make this one of the highest-scoring Platinum games Sunday.",
     featured: [
-      { name: "K. Eckman (Team Takeover)", stats: "24.5 PPG • 4.5 APG • 3.5 SPG" },
-      { name: "A. Phillips (Cal Storm - Team Taurasi)", stats: "14.5 PPG • 5.5 SPG" },
+      { name: "KennaD Buie (AL Southern Starz)", stats: "34 PTS • 10 REB • 6 AST" },
+      { name: "Mikaela Tran (MOKAN)", stats: "20 PTS • 6 3PT FG" },
+      { name: "Lilia Freeman (MOKAN)", stats: "12 PTS • 11 REB" },
     ],
   },
   {
-    when: "Saturday · 1:30 PM CDT",
-    venue: "Court 42",
-    a: { name: "Cyfair Elite Sports JR 14", tag: "CYFAIR" },
-    b: { name: "Palmetto 76ers - A’ja Wilson Elite JR 14", tag: "PALMETTO" },
-    why: "Cyfair has already shown high-level defensive activity and toughness, while Palmetto enters with one of the most intriguing team identities in the field. This is the kind of matchup where rebounding, rim pressure, and defensive versatility could completely swing momentum. Expect physical possessions and high-energy stretches throughout.",
+    when: "Sunday · 12:15 PM CDT",
+    stage: "Platinum Bracket",
+    venue: "Court 40",
+    a: { name: "North Tartan", tag: "TARTAN" },
+    b: { name: "All Iowa Attack", tag: "IOWA" },
+    why: "All Iowa Attack has quietly looked like one of the most complete offensive teams in New Orleans, and Sunday’s matchup against North Tartan should provide another major test. North Tartan’s physicality and rebounding presence create an interesting contrast against Iowa’s spacing and pace. Elite offensive efficiency meets physical halfcourt basketball, with North Tartan’s rebounding capable of dictating tempo.",
     featured: [
-      { name: "R. Brown (Cyfair Elite Sports)", stats: "18.5 PPG • 6.5 RPG • 4.0 APG • 3.5 SPG" },
-      { name: "A. Owalla (Palmetto 76ers - A’ja Wilson Elite)", stats: "7.5 RPG • 4.0 BPG" },
+      { name: "Tatum Eberly (Indiana One / Iowa circuit standout)", stats: "14 PTS • 4 AST" },
+      { name: "Mara Segerstrom (North Tartan)", stats: "8 PTS • 6 REB • 3 BLK" },
+      { name: "Amelia Truty (North Tartan)", stats: "11 PTS • 3-5 3PT" },
     ],
   },
   {
-    when: "Saturday · 12:15 PM CDT",
-    venue: "Court 42",
-    a: { name: "All Iowa Attack JR 14", tag: "IOWA" },
-    b: { name: "Team Redeye JR 14", tag: "REDEYE" },
-    why: "All Iowa Attack continues to look like one of the premier offensive groups in New Orleans, featuring pace, floor spacing, and confident scorers across the lineup. Team Redeye presents a major test with athletic pressure and transition energy. If both teams get comfortable early, this could turn into one of the highest-level offensive showcases of Saturday pool play.",
+    when: "Sunday · 2:45 PM CDT",
+    stage: "Gold Bracket",
+    venue: "Court 41",
+    a: { name: "Sports Academy Swish", tag: "SWISH" },
+    b: { name: "Cyfair Elite Sports", tag: "CYFAIR" },
+    why: "No team has played faster or generated more offensive chaos this weekend than Sports Academy Swish, making this late matchup against Cyfair Elite Sports one of Sunday’s most intriguing games. Cyfair brings size, athleticism, and offensive balance into the matchup, while Swish continues to push tempo relentlessly in transition. Transition-heavy styles, Swish pressure, and Cyfair’s offensive balance could make this one of Sunday’s most entertaining games.",
     featured: [
-      { name: "K. Croom (All Iowa Attack)", stats: "19.0 PPG • 6.0 RPG • 4.5 APG" },
-      { name: "T. Eberly (All Iowa Attack)", stats: "18.5 PPG" },
+      { name: "Louisa Varawa (Sports Academy Swish)", stats: "22 PTS • 8 REB" },
+      { name: "Audrey Walker (Cyfair Elite Sports)", stats: "17 PTS" },
+      { name: "Addison Collins (Cyfair Elite Sports)", stats: "12 PTS • 4 AST" },
     ],
   },
 ];
@@ -55,7 +62,7 @@ export function MatchupPreviews() {
       <div className="mb-4 flex items-center justify-between gap-2">
         <h2 className="font-headline text-xl tracking-[0.18em] text-ink">MATCHUPS</h2>
         <span className="text-xs font-semibold tracking-wide text-gold drop-shadow-[0_0_12px_rgba(212,180,92,0.25)]">
-          SATURDAY FEATURED
+          SUNDAY TO WATCH
         </span>
       </div>
       <div className="flex flex-col gap-5">
@@ -105,7 +112,9 @@ export function MatchupPreviews() {
             >
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/[0.07] bg-gradient-to-r from-panel to-paper px-4 py-3 text-xs text-muted sm:px-5">
                 <span className="font-semibold tracking-wide text-ink">{g.when}</span>
-                <span className="text-[11px] font-medium tracking-wide text-muted">{g.venue}</span>
+                <span className="text-[11px] font-medium tracking-wide text-muted">
+                  {g.stage} • {g.venue}
+                </span>
               </div>
               <div className="grid gap-4 p-4 sm:gap-5 sm:p-5">
                 <div className="flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center sm:gap-3">
