@@ -8,7 +8,7 @@ export type NotebookItem = {
 
 export const notebookItems: NotebookItem[] = [
   {
-    title: "Saturday Notebook: Shooters Shine Across Jr. EYBL Opening Day",
+    title: "Saturday Takeaways: Shooters Shine",
     meta: "Notebook · Saturday Takeaways",
     href: "/articles/saturday-notebook-shooters-shine",
     imageSrc: "/saturday-takeaways-new-orleans-session-2.png",
