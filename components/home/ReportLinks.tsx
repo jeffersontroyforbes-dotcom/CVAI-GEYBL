@@ -9,7 +9,11 @@ const reports = [
     href: "/CVAI_Saturday_Notebook_Scouting_Report.pdf",
     download: "CVAI_Saturday_Notebook_Scouting_Report.pdf",
   },
-  { title: "NOLA Sunday Recap" },
+  {
+    title: "NOLA Sunday Recap",
+    href: "/CVAI_Sunday_Takeaways_Report.pdf",
+    download: "CVAI_Sunday_Takeaways_Report.pdf",
+  },
 ];
 
 export function ReportLinks() {
