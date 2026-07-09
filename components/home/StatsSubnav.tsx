@@ -1,7 +1,6 @@
 const links = [
   { label: "Stats Hub", href: "#hub", active: true },
   { label: "14U Notebook", href: "#notebook" },
-  { label: "Matchups", href: "#matchups" },
   { label: "Reports", href: "#reports" },
 ];
 

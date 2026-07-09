@@ -1,7 +1,6 @@
 import { ArticleGrid } from "@/components/home/ArticleGrid";
 import { HeroArticle } from "@/components/home/HeroArticle";
 import { LiveLeadersSection } from "@/components/home/LiveLeadersSection";
-import { MatchupPreviews } from "@/components/home/MatchupPreviews";
 import { ContactSection } from "@/components/home/ContactSection";
 import { ReportLinks } from "@/components/home/ReportLinks";
 import { SiteFooter } from "@/components/home/SiteFooter";
@@ -17,7 +16,6 @@ export default function HomePage() {
       </div>
       <main>
         <HeroArticle />
-        <MatchupPreviews />
         <ArticleGrid />
         <ReportLinks />
         <LiveLeadersSection />
