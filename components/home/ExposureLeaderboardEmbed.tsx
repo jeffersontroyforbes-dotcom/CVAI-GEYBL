@@ -1,59 +1,21 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  EXPOSURE_14U_DIVISION_NAME,
+  EXPOSURE_VEGAS_EVENT_ID,
+  type ExposureStatisticsResponse,
+  type ExposureStatCategory,
+} from "@/lib/exposure";
 
-const SCRIPT_ID = "exp.widgets";
-const SCRIPT_SRC = "https://basketball.exposureevents.com/scripts/exposure.widgets.min.js";
+const EXPOSURE_BASE = "https://basketball.exposureevents.com";
+const LEADERS_PER_CATEGORY = 5;
 
 export type LeaderboardMode = "daily" | "season";
 
-type WidgetConfig = {
-  containerId: string;
-  dataHref: string;
-  dataHeight: string;
+type ExposureLeaderboardEmbedProps = {
+  mode?: LeaderboardMode;
 };
-
-/**
- * Exposure statistics widget. Both modes use the same event embed until a distinct daily URL is confirmed.
- */
-function getExposureWidget(mode: LeaderboardMode): WidgetConfig {
-  void mode;
-  return {
-    containerId: "exp-statistics-268314",
-    dataHref: "https://basketball.exposureevents.com/widgets/v1/statistics?eventid=268314",
-    dataHeight: "500px",
-  };
-}
-
-function loadExposureScript(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const existing = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
-    if (existing) {
-      if (existing.dataset.loaded === "1") {
-        resolve();
-        return;
-      }
-      existing.addEventListener("load", () => resolve(), { once: true });
-      existing.addEventListener(
-        "error",
-        () => reject(new Error("Exposure script failed")),
-        { once: true },
-      );
-      return;
-    }
-
-    const js = document.createElement("script");
-    js.id = SCRIPT_ID;
-    js.async = true;
-    js.src = SCRIPT_SRC;
-    js.addEventListener("load", () => {
-      js.dataset.loaded = "1";
-      resolve();
-    });
-    js.addEventListener("error", () => reject(new Error("Exposure script failed")));
-    document.body.appendChild(js);
-  });
-}
 
 function SkeletonBar({ className }: { className?: string }) {
   return (
@@ -72,12 +34,16 @@ function EmbedSkeleton() {
         <SkeletonBar className="h-9 w-[42%] max-w-[200px]" />
         <SkeletonBar className="h-9 w-10 shrink-0 sm:w-11" />
       </div>
-      <div className="space-y-3.5 sm:space-y-4">
-        {Array.from({ length: 9 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-3 sm:gap-4">
-            <SkeletonBar className="h-2.5 w-7 shrink-0 sm:w-8" />
-            <SkeletonBar className="h-2.5 flex-1" />
-            <SkeletonBar className="h-2.5 w-12 shrink-0 sm:w-14" />
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="space-y-3 rounded-lg border border-line/80 bg-panel/50 p-3">
+            <SkeletonBar className="mx-auto h-4 w-24" />
+            {Array.from({ length: 5 }).map((__, j) => (
+              <div key={j} className="flex items-center gap-2">
+                <SkeletonBar className="h-2.5 flex-1" />
+                <SkeletonBar className="h-2.5 w-10" />
+              </div>
+            ))}
           </div>
         ))}
       </div>
@@ -115,39 +81,103 @@ function FallbackTable() {
   );
 }
 
-type ExposureLeaderboardEmbedProps = {
-  mode?: LeaderboardMode;
-};
+function StatCategoryCard({ category }: { category: ExposureStatCategory }) {
+  const leaders = category.Value.slice(0, LEADERS_PER_CATEGORY);
+
+  return (
+    <div className="flex flex-col overflow-hidden rounded-lg border border-black/[0.1] bg-paper shadow-cardInner">
+      <div className="border-b border-black/[0.08] bg-panel/70 px-3 py-2.5 text-center">
+        <p className="font-headline text-[11px] font-extrabold uppercase tracking-[0.14em] text-ink sm:text-xs">
+          {category.Name}
+        </p>
+        <p className="mt-0.5 font-headline text-[9px] font-bold uppercase tracking-[0.22em] text-muted">
+          {category.Abbr}
+        </p>
+      </div>
+      <ul className="divide-y divide-line/80 px-2 py-1">
+        {leaders.map((leader) => (
+          <li key={`${category.Abbr}-${leader.Name}-${leader.Display}`}>
+            <a
+              href={`${EXPOSURE_BASE}${leader.PlayerUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-start justify-between gap-2 px-1.5 py-2 transition hover:bg-panel/60"
+            >
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-xs font-semibold text-ink group-hover:text-ink/80 sm:text-sm">
+                  {leader.Name}
+                </span>
+                <span className="mt-0.5 block truncate text-[10px] text-muted sm:text-[11px]">
+                  {leader.TeamName.replace(/ 14 Jr\. EYBL$/, "")}
+                </span>
+              </span>
+              <span className="shrink-0 pt-0.5 font-headline text-xs font-extrabold tabular-nums text-ink sm:text-sm">
+                {leader.Display}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function LeaderboardGrid({ data }: { data: ExposureStatisticsResponse }) {
+  if (!data.HasStatistics || data.StatisticSummaries.length === 0) {
+    return <FallbackTable />;
+  }
+
+  return (
+    <div>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-black/[0.08] pb-3 sm:mb-5">
+        <p className="font-headline text-[10px] font-bold uppercase tracking-[0.28em] text-muted sm:text-[11px] sm:tracking-[0.32em]">
+          Vegas Session 3 · Event {EXPOSURE_VEGAS_EVENT_ID}
+        </p>
+        <span className="inline-flex rounded-full border border-gold/45 bg-ink px-3 py-1 font-headline text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold-bright sm:text-[11px]">
+          {EXPOSURE_14U_DIVISION_NAME}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">
+        {data.StatisticSummaries.map((category) => (
+          <StatCategoryCard key={category.Abbr} category={category} />
+        ))}
+      </div>
+
+      <p className="mt-5 text-center text-[10px] font-medium text-muted sm:mt-6 sm:text-[11px]">
+        Official statistics via{" "}
+        <a
+          href="https://basketball.exposureevents.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold text-ink underline decoration-gold/50 underline-offset-2 hover:text-ink/80"
+        >
+          Exposure Basketball Events
+        </a>
+      </p>
+    </div>
+  );
+}
 
 export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboardEmbedProps) {
-  const cfg = useMemo(() => getExposureWidget(mode), [mode]);
+  void mode;
   const [phase, setPhase] = useState<"loading" | "ready" | "fallback">("loading");
+  const [data, setData] = useState<ExposureStatisticsResponse | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    let timeoutId = 0;
-
-    const invalid =
-      !cfg.dataHref.includes("eventid=") || cfg.dataHref.toUpperCase().includes("REPLACE_ME");
-
-    if (invalid) {
-      setPhase("fallback");
-      return;
-    }
-
-    setPhase("loading");
-
-    timeoutId = window.setTimeout(() => {
+    const timeoutId = window.setTimeout(() => {
       if (!cancelled) setPhase((p) => (p === "loading" ? "fallback" : p));
     }, 12000);
 
     void (async () => {
       try {
-        await loadExposureScript();
-        if (cancelled) return;
-        await new Promise((r) => setTimeout(r, 50));
+        const response = await fetch("/api/exposure/statistics");
+        if (!response.ok) throw new Error("statistics fetch failed");
+        const payload = (await response.json()) as ExposureStatisticsResponse;
         if (cancelled) return;
         window.clearTimeout(timeoutId);
+        setData(payload);
         setPhase("ready");
       } catch {
         if (!cancelled) {
@@ -161,9 +191,7 @@ export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboar
       cancelled = true;
       window.clearTimeout(timeoutId);
     };
-  }, [cfg.containerId, cfg.dataHref]);
-
-  const showEmbed = phase !== "fallback";
+  }, []);
 
   return (
     <div className="relative min-h-[500px] w-full">
@@ -175,17 +203,7 @@ export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboar
 
       {phase === "fallback" ? <FallbackTable /> : null}
 
-      {showEmbed ? (
-        <div
-          key={cfg.dataHref}
-          id={cfg.containerId}
-          data-href={cfg.dataHref}
-          data-responsive="true"
-          data-width="100%"
-          data-height={cfg.dataHeight}
-          className="min-h-[500px] w-full"
-        />
-      ) : null}
+      {phase === "ready" && data ? <LeaderboardGrid data={data} /> : null}
     </div>
   );
 }
