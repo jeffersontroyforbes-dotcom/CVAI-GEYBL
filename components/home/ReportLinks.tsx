@@ -19,7 +19,10 @@ const reports = [
 export function ReportLinks() {
   return (
     <section id="reports" className="mx-auto max-w-6xl px-4 py-8 sm:px-5 sm:py-10">
-      <h2 className="mb-3 font-headline text-xl tracking-[0.18em] text-ink">REPORTS & DOWNLOADS</h2>
+      <div className="mb-3">
+        <h2 className="font-headline text-xl tracking-[0.18em] text-ink">NOLA SESSION 2 REPORTS</h2>
+        <p className="mt-1 text-xs font-medium text-muted">Downloadable recaps from New Orleans</p>
+      </div>
       <div className="divide-y divide-black/[0.07] overflow-hidden rounded-2xl border border-black/[0.1] bg-paper shadow-[0_10px_32px_-12px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.04]">
         {reports.map((r) => (
           r.href ? (

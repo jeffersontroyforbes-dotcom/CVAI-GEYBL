@@ -2,7 +2,11 @@ import { ExposureLeaderboardEmbed } from "./ExposureLeaderboardEmbed";
 
 export function LiveLeadersSection() {
   return (
-    <section className="mx-auto max-w-6xl px-4 pb-8 pt-3 sm:px-5 sm:pb-10 sm:pt-4" aria-labelledby="live-leaders-heading">
+    <section
+      id="leaders"
+      className="mx-auto max-w-6xl px-4 pb-8 pt-1 sm:px-5 sm:pb-10 sm:pt-2"
+      aria-labelledby="live-leaders-heading"
+    >
       <div className="flex flex-col gap-1">
         <p className="font-headline text-[10px] font-bold uppercase tracking-[0.42em] text-ink sm:text-[11px] sm:tracking-[0.46em]">
           GEYBL · 14U

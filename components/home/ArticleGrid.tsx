@@ -31,14 +31,11 @@ function ArticleThumb({ imageSrc, imageAlt }: Pick<NotebookItem, "imageSrc" | "i
 export function ArticleGrid() {
   return (
     <section id="notebook" className="mx-auto max-w-6xl px-4 py-8 sm:px-5 sm:py-10">
-      <div className="mb-4 flex items-end justify-between gap-2">
-        <h2 className="font-headline text-xl tracking-[0.18em] text-ink">NOTEBOOK</h2>
-        <a
-          href="/#notebook"
-          className="text-xs font-semibold tracking-wide text-gold drop-shadow-[0_0_10px_rgba(212,180,92,0.22)] transition hover:text-gold-bright"
-        >
-          SEE ALL
-        </a>
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h2 className="font-headline text-xl tracking-[0.18em] text-ink">NOLA ARCHIVE</h2>
+          <p className="mt-1 text-xs font-medium text-muted">Session 2 coverage · New Orleans</p>
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-4">
         {notebookItems.map((it) => (

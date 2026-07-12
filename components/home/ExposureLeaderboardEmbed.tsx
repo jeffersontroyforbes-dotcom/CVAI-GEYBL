@@ -10,6 +10,7 @@ import {
 
 const EXPOSURE_BASE = "https://basketball.exposureevents.com";
 const LEADERS_PER_CATEGORY = 5;
+const REFRESH_MS = 60_000;
 
 export type LeaderboardMode = "daily" | "season";
 
@@ -122,10 +123,12 @@ function StatCategoryCard({ category }: { category: ExposureStatCategory }) {
   );
 }
 
-function LeaderboardGrid({ data }: { data: ExposureStatisticsResponse }) {
+function LeaderboardGrid({ data, updatedAt }: { data: ExposureStatisticsResponse; updatedAt: Date }) {
   if (!data.HasStatistics || data.StatisticSummaries.length === 0) {
     return <FallbackTable />;
   }
+
+  const updatedLabel = updatedAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 
   return (
     <div>
@@ -133,9 +136,14 @@ function LeaderboardGrid({ data }: { data: ExposureStatisticsResponse }) {
         <p className="font-headline text-[10px] font-bold uppercase tracking-[0.28em] text-muted sm:text-[11px] sm:tracking-[0.32em]">
           Vegas Session 3 · Event {EXPOSURE_VEGAS_EVENT_ID}
         </p>
-        <span className="inline-flex rounded-full border border-gold/45 bg-ink px-3 py-1 font-headline text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold-bright sm:text-[11px]">
-          {EXPOSURE_14U_DIVISION_NAME}
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-headline text-[9px] font-semibold uppercase tracking-[0.18em] text-muted sm:text-[10px]">
+            Updated {updatedLabel}
+          </span>
+          <span className="inline-flex rounded-full border border-gold/45 bg-ink px-3 py-1 font-headline text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold-bright sm:text-[11px]">
+            {EXPOSURE_14U_DIVISION_NAME}
+          </span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">
@@ -163,33 +171,45 @@ export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboar
   void mode;
   const [phase, setPhase] = useState<"loading" | "ready" | "fallback">("loading");
   const [data, setData] = useState<ExposureStatisticsResponse | null>(null);
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    const timeoutId = window.setTimeout(() => {
-      if (!cancelled) setPhase((p) => (p === "loading" ? "fallback" : p));
-    }, 12000);
+    let timeoutId = 0;
+    let intervalId = 0;
 
-    void (async () => {
+    async function loadLeaders(isRefresh = false) {
       try {
-        const response = await fetch("/api/exposure/statistics");
+        const response = await fetch("/api/exposure/statistics", { cache: "no-store" });
         if (!response.ok) throw new Error("statistics fetch failed");
         const payload = (await response.json()) as ExposureStatisticsResponse;
         if (cancelled) return;
         window.clearTimeout(timeoutId);
         setData(payload);
+        setUpdatedAt(new Date());
         setPhase("ready");
       } catch {
-        if (!cancelled) {
+        if (!cancelled && !isRefresh) {
           window.clearTimeout(timeoutId);
           setPhase("fallback");
         }
       }
-    })();
+    }
+
+    setPhase("loading");
+    timeoutId = window.setTimeout(() => {
+      if (!cancelled) setPhase((p) => (p === "loading" ? "fallback" : p));
+    }, 12000);
+
+    void loadLeaders();
+    intervalId = window.setInterval(() => {
+      void loadLeaders(true);
+    }, REFRESH_MS);
 
     return () => {
       cancelled = true;
       window.clearTimeout(timeoutId);
+      window.clearInterval(intervalId);
     };
   }, []);
 
@@ -203,7 +223,7 @@ export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboar
 
       {phase === "fallback" ? <FallbackTable /> : null}
 
-      {phase === "ready" && data ? <LeaderboardGrid data={data} /> : null}
+      {phase === "ready" && data && updatedAt ? <LeaderboardGrid data={data} updatedAt={updatedAt} /> : null}
     </div>
   );
 }

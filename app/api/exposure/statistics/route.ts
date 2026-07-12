@@ -5,7 +5,7 @@ import {
   type ExposureStatisticsResponse,
 } from "@/lib/exposure";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
@@ -13,7 +13,7 @@ export async function GET() {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `divisionId=${EXPOSURE_14U_DIVISION_ID}`,
-      next: { revalidate },
+      cache: "no-store",
     });
 
     if (!response.ok) {
@@ -24,7 +24,7 @@ export async function GET() {
 
     return NextResponse.json(data, {
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
       },
     });
   } catch {
