@@ -1,8 +1,10 @@
 const links = [
   { label: "Stats Hub", href: "#hub", active: true },
-  { label: "Live Leaders", href: "#leaders" },
-  { label: "NOLA Archive", href: "#notebook" },
-  { label: "Reports", href: "#reports" },
+  { label: "Leaders", href: "#leaders" },
+  { label: "Scoreboard", href: "#scoreboard" },
+  { label: "Standings", href: "#standings" },
+  { label: "Matchups", href: "#matchups" },
+  { label: "Stock", href: "#stock" },
 ];
 
 export function StatsSubnav() {
@@ -19,7 +21,7 @@ export function StatsSubnav() {
               href={l.href}
               className={`shrink-0 snap-start whitespace-nowrap font-headline text-[11px] font-bold uppercase leading-tight tracking-[0.1em] transition sm:rounded-full sm:px-5 sm:py-2.5 sm:text-xs sm:tracking-[0.16em] ${
                 l.active
-                  ? "rounded-full bg-ink px-4 py-2 text-paper ring-1 ring-gold/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_0_24px_-4px_rgba(212,175,55,0.42)] sm:px-5 sm:py-2.5"
+                  ? "rounded-full bg-ink px-4 py-2 text-paper ring-1 ring-gold/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_0_24px_-4px_rgba(255, 79, 1,0.42)] sm:px-5 sm:py-2.5"
                   : "max-sm:rounded-none px-2 py-2 text-ink hover:text-ink/70 sm:px-5 sm:py-2.5"
               }`}
             >

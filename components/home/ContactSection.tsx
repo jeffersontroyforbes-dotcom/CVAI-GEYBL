@@ -17,7 +17,7 @@ export function ContactSection() {
           <div className="mt-8 flex justify-center sm:mt-10">
             <a
               href={mailtoHref}
-              className="inline-flex min-h-[3.75rem] w-full max-w-xl items-center justify-center rounded-xl border border-gold/45 bg-gold px-6 py-5 font-headline text-xl font-extrabold uppercase tracking-[0.14em] text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_0_40px_-8px_rgba(212,175,55,0.55)] ring-2 ring-gold-bright/50 transition duration-200 hover:border-gold-bright hover:brightness-[1.03] active:scale-[0.99] sm:min-h-[4.25rem] sm:rounded-2xl sm:py-6 sm:text-2xl sm:tracking-[0.16em] md:text-3xl md:tracking-[0.18em]"
+              className="inline-flex min-h-[3.75rem] w-full max-w-xl items-center justify-center rounded-xl border border-gold/45 bg-gold px-6 py-5 font-headline text-xl font-extrabold uppercase tracking-[0.14em] text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_0_40px_-8px_rgba(255, 79, 1,0.55)] ring-2 ring-gold-bright/50 transition duration-200 hover:border-gold-bright hover:brightness-[1.03] active:scale-[0.99] sm:min-h-[4.25rem] sm:rounded-2xl sm:py-6 sm:text-2xl sm:tracking-[0.16em] md:text-3xl md:tracking-[0.18em]"
               aria-label={`Contact us via email at ${CONTACT_EMAIL}`}
             >
               CONTACT US

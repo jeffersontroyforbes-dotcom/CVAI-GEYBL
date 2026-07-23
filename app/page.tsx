@@ -1,8 +1,7 @@
-import { ArticleGrid } from "@/components/home/ArticleGrid";
 import { HeroArticle } from "@/components/home/HeroArticle";
 import { LiveLeadersSection } from "@/components/home/LiveLeadersSection";
+import { NationalsLiveModules } from "@/components/home/NationalsLiveModules";
 import { ContactSection } from "@/components/home/ContactSection";
-import { ReportLinks } from "@/components/home/ReportLinks";
 import { SiteFooter } from "@/components/home/SiteFooter";
 import { SiteHeader } from "@/components/home/SiteHeader";
 import { StatsSubnav } from "@/components/home/StatsSubnav";
@@ -17,8 +16,7 @@ export default function HomePage() {
       <main>
         <HeroArticle />
         <LiveLeadersSection />
-        <ArticleGrid />
-        <ReportLinks />
+        <NationalsLiveModules />
         <ContactSection />
       </main>
       <SiteFooter />

@@ -31,7 +31,7 @@ export function HeroCarousel({ items }: HeroCarouselProps) {
   return (
     <Link
       href={activeItem.href}
-      className="hero-carousel group relative z-10 block aspect-square w-full overflow-hidden rounded-2xl border border-gold/35 bg-ink shadow-heroGoldRing ring-1 ring-gold/25 transition duration-300 ease-out will-change-transform hover:border-gold/55 hover:shadow-[0_0_0_1px_rgba(212,175,55,0.45),0_0_52px_-6px_rgba(212,175,55,0.5),0_24px_56px_-12px_rgba(0,0,0,0.5)] active:scale-[0.985] sm:rounded-[1.35rem] sm:active:scale-[0.992] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-bright focus-visible:ring-offset-2 focus-visible:ring-offset-matte"
+      className="hero-carousel group relative z-10 block aspect-square w-full overflow-hidden rounded-2xl border border-gold/35 bg-ink shadow-heroGoldRing ring-1 ring-gold/25 transition duration-300 ease-out will-change-transform hover:border-gold/55 hover:shadow-[0_0_0_1px_rgba(255, 79, 1,0.45),0_0_52px_-6px_rgba(255, 79, 1,0.5),0_24px_56px_-12px_rgba(0,0,0,0.5)] active:scale-[0.985] sm:rounded-[1.35rem] sm:active:scale-[0.992] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-bright focus-visible:ring-offset-2 focus-visible:ring-offset-matte"
       aria-label={`Read notebook: ${activeItem.title}`}
     >
       {items.map((item, index) => (

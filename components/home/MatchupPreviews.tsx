@@ -61,7 +61,7 @@ export function MatchupPreviews() {
     <section id="matchups" className="mx-auto max-w-6xl px-4 py-8 sm:px-5 sm:py-10">
       <div className="mb-4 flex items-center justify-between gap-2">
         <h2 className="font-headline text-xl tracking-[0.18em] text-ink">MATCHUPS</h2>
-        <span className="text-xs font-semibold tracking-wide text-gold drop-shadow-[0_0_12px_rgba(212,180,92,0.25)]">
+        <span className="text-xs font-semibold tracking-wide text-gold drop-shadow-[0_0_12px_rgba(255, 79, 1,0.25)]">
           SUNDAY TO WATCH
         </span>
       </div>

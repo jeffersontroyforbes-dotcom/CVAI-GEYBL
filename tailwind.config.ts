@@ -1,5 +1,9 @@
 import type { Config } from "tailwindcss";
 
+/** Nike Nationals orange from Cerebro hub (`--gold` / `--peach-orange`). */
+const NN_ORANGE = "#ff4f01";
+const NN_ORANGE_RGB = "255, 79, 1";
+
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx,css}",
@@ -16,11 +20,12 @@ const config: Config = {
         dim: "#5c5a55",
         line: "#d0d0cc",
         panel: "#e8e8e5",
+        /** Accent tokens keep the `gold` name so existing classNames map to NN orange. */
         gold: {
-          DEFAULT: "#d4af37",
-          bright: "#f0dc82",
-          deep: "#4a3a0a",
-          soft: "#f8efd4",
+          DEFAULT: NN_ORANGE,
+          bright: "#ff6a28",
+          deep: "#c23a00",
+          soft: "#ffe4d6",
         },
       },
       fontFamily: {
@@ -33,11 +38,10 @@ const config: Config = {
           "0 28px 64px -14px rgba(0,0,0,0.34), 0 12px 28px -10px rgba(0,0,0,0.22)",
         liftCard:
           "0 24px 60px -12px rgba(0,0,0,0.32), 0 10px 24px -8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.95)",
-        insetGold: "inset 0 1px 0 rgba(240,220,130,0.65)",
-        glowGold: "0 0 36px -4px rgba(212,175,55,0.55), 0 0 80px -20px rgba(240,220,130,0.22)",
-        glowGoldSoft: "0 0 28px -6px rgba(212,175,55,0.4)",
-        heroGoldRing:
-          "0 0 0 1px rgba(212,175,55,0.35), 0 0 48px -8px rgba(212,175,55,0.45), 0 24px 56px -12px rgba(0,0,0,0.45)",
+        insetGold: `inset 0 1px 0 rgba(${NN_ORANGE_RGB},0.65)`,
+        glowGold: `0 0 36px -4px rgba(${NN_ORANGE_RGB},0.55), 0 0 80px -20px rgba(${NN_ORANGE_RGB},0.22)`,
+        glowGoldSoft: `0 0 28px -6px rgba(${NN_ORANGE_RGB},0.4)`,
+        heroGoldRing: `0 0 0 1px rgba(${NN_ORANGE_RGB},0.35), 0 0 48px -8px rgba(${NN_ORANGE_RGB},0.45), 0 24px 56px -12px rgba(0,0,0,0.45)`,
         navDepth:
           "0 8px 32px -4px rgba(0,0,0,0.65), inset 0 -1px 0 rgba(255,255,255,0.06)",
         cardInner: "inset 0 1px 0 rgba(255,255,255,0.96), 0 1px 0 rgba(0,0,0,0.08)",

@@ -132,11 +132,11 @@ export default function PlayersToWatchNotebookPage() {
       <article className="bg-matte">
         <header className="border-b border-gold/25 bg-ink pb-10 pt-8 sm:pb-12 sm:pt-10">
           <div className="mx-auto max-w-[40rem] px-4 sm:px-5">
-            <p className="inline-flex rounded-md border border-gold/45 bg-white/[0.04] px-3 py-1.5 font-headline text-[10px] font-bold uppercase tracking-[0.34em] text-gold-bright shadow-[0_0_24px_-8px_rgba(212,175,55,0.35)] sm:text-[11px] sm:tracking-[0.38em]">
+            <p className="inline-flex rounded-md border border-gold/45 bg-white/[0.04] px-3 py-1.5 font-headline text-[10px] font-bold uppercase tracking-[0.34em] text-gold-bright shadow-[0_0_24px_-8px_rgba(255, 79, 1,0.35)] sm:text-[11px] sm:tracking-[0.38em]">
               14U Notebook
             </p>
 
-            <div className="relative mt-5 aspect-[653/265] w-full overflow-hidden rounded-xl ring-1 ring-gold/35 shadow-[0_0_40px_-12px_rgba(212,175,55,0.35)] sm:mt-6 sm:rounded-[1.05rem]">
+            <div className="relative mt-5 aspect-[653/265] w-full overflow-hidden rounded-xl ring-1 ring-gold/35 shadow-[0_0_40px_-12px_rgba(255, 79, 1,0.35)] sm:mt-6 sm:rounded-[1.05rem]">
               {/* eslint-disable-next-line @next/next/no-img-element -- stable banner with `images.unoptimized` */}
               <img
                 src="/hero-players-to-watch.png"

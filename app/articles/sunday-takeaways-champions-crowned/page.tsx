@@ -98,7 +98,7 @@ export default function SundayTakeawaysPage() {
             </div>
 
             <div className="mt-6 min-w-0 sm:mt-7">
-              <p className="inline-flex rounded-md border border-gold/45 bg-white/[0.04] px-3 py-1.5 font-headline text-[10px] font-bold uppercase tracking-[0.34em] text-gold-bright shadow-[0_0_24px_-8px_rgba(212,175,55,0.35)] sm:text-[11px] sm:tracking-[0.38em]">
+              <p className="inline-flex rounded-md border border-gold/45 bg-white/[0.04] px-3 py-1.5 font-headline text-[10px] font-bold uppercase tracking-[0.34em] text-gold-bright shadow-[0_0_24px_-8px_rgba(255, 79, 1,0.35)] sm:text-[11px] sm:tracking-[0.38em]">
                 14U Notebook
               </p>
               <h1 className="mt-5 font-headline text-[2rem] font-extrabold uppercase leading-[1.02] tracking-[0.04em] text-paper sm:text-5xl sm:tracking-[0.05em]">

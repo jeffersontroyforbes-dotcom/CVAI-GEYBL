@@ -30,7 +30,7 @@ export function SiteFooter() {
           </p>
         </div>
         <div className="shrink-0 text-sm font-medium text-white/[0.78] sm:text-right">
-          <span className="text-gold-bright drop-shadow-[0_0_14px_rgba(232,207,130,0.28)]">
+          <span className="text-gold-bright drop-shadow-[0_0_14px_rgba(255, 138, 77,0.28)]">
             Powered by CourtVision AI
           </span>
           <span className="mx-2 text-white/25">|</span>

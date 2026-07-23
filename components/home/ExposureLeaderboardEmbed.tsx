@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import {
   EXPOSURE_14U_DIVISION_NAME,
-  EXPOSURE_VEGAS_EVENT_ID,
+  EXPOSURE_EVENT_ID,
+  EXPOSURE_EVENT_LABEL,
   type ExposureStatisticsResponse,
   type ExposureStatCategory,
 } from "@/lib/exposure";
 
 const EXPOSURE_BASE = "https://basketball.exposureevents.com";
-const LEADERS_PER_CATEGORY = 5;
+/** Matches Exposure widget default before "Show More". */
+const LEADERS_PREVIEW = 10;
 const REFRESH_MS = 60_000;
 
 export type LeaderboardMode = "daily" | "season";
@@ -55,35 +57,45 @@ function EmbedSkeleton() {
   );
 }
 
-function FallbackTable() {
-  const rows = [
-    { rank: "1", left: "—", right: "—" },
-    { rank: "2", left: "—", right: "—" },
-    { rank: "3", left: "—", right: "—" },
-    { rank: "4", left: "—", right: "—" },
-    { rank: "5", left: "—", right: "—" },
-  ];
-
+function WaitingForTip() {
   return (
-    <div className="p-3">
-      <p className="mb-3 text-center text-xs font-semibold tracking-wide text-muted">
-        Leaderboard unavailable — verify embed URL or connectivity.
+    <div className="rounded-xl border border-black/[0.08] bg-panel/40 px-4 py-10 text-center sm:px-6 sm:py-12">
+      <p className="font-headline text-xs font-extrabold uppercase tracking-[0.28em] text-ink sm:text-sm">
+        Leaders unlock after tip
       </p>
-      <div className="divide-y divide-line rounded-xl border border-line bg-panel/40">
-        {rows.map((r) => (
-          <div key={r.rank} className="flex items-center gap-3 px-3 py-3 text-sm">
-            <span className="w-6 text-xs font-semibold text-dim">{r.rank}</span>
-            <span className="flex-1 truncate text-muted">{r.left}</span>
-            <span className="tabular-nums text-xs font-semibold text-muted">{r.right}</span>
-          </div>
-        ))}
-      </div>
+      <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
+        Nike Nationals 14 Jr. EYBL stats will fill here live once games tip Friday at McCormick Place.
+        Schedule, standings, and matchups below are already live.
+      </p>
+      <a
+        href={`https://basketball.exposureevents.com/widgets/v1/statistics?eventid=${EXPOSURE_EVENT_ID}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-5 inline-flex rounded-full bg-gold px-4 py-2 font-headline text-[10px] font-bold uppercase tracking-[0.18em] text-ink"
+      >
+        Open Exposure stats
+      </a>
     </div>
   );
 }
 
-function StatCategoryCard({ category }: { category: ExposureStatCategory }) {
-  const leaders = category.Value.slice(0, LEADERS_PER_CATEGORY);
+function ErrorState() {
+  return (
+    <div className="rounded-xl border border-black/[0.08] bg-panel/40 px-4 py-8 text-center">
+      <p className="text-sm font-semibold text-ink">Couldn’t reach Exposure stats</p>
+      <p className="mt-2 text-xs text-muted">Check connection and try refreshing the page.</p>
+    </div>
+  );
+}
+
+function StatCategoryCard({
+  category,
+  expanded,
+}: {
+  category: ExposureStatCategory;
+  expanded: boolean;
+}) {
+  const leaders = expanded ? category.Value : category.Value.slice(0, LEADERS_PREVIEW);
 
   return (
     <div className="flex flex-col overflow-hidden rounded-lg border border-black/[0.1] bg-paper shadow-cardInner">
@@ -96,8 +108,8 @@ function StatCategoryCard({ category }: { category: ExposureStatCategory }) {
         </p>
       </div>
       <ul className="divide-y divide-line/80 px-2 py-1">
-        {leaders.map((leader) => (
-          <li key={`${category.Abbr}-${leader.Name}-${leader.Display}`}>
+        {leaders.map((leader, index) => (
+          <li key={`${category.Abbr}-${leader.Name}-${leader.Display}-${index}`}>
             <a
               href={`${EXPOSURE_BASE}${leader.PlayerUrl}`}
               target="_blank"
@@ -124,17 +136,21 @@ function StatCategoryCard({ category }: { category: ExposureStatCategory }) {
 }
 
 function LeaderboardGrid({ data, updatedAt }: { data: ExposureStatisticsResponse; updatedAt: Date }) {
+  const [expanded, setExpanded] = useState(false);
+
   if (!data.HasStatistics || data.StatisticSummaries.length === 0) {
-    return <FallbackTable />;
+    return <WaitingForTip />;
   }
 
   const updatedLabel = updatedAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  const maxRows = Math.max(...data.StatisticSummaries.map((c) => c.Value.length), 0);
+  const canShowMore = maxRows > LEADERS_PREVIEW;
 
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-black/[0.08] pb-3 sm:mb-5">
         <p className="font-headline text-[10px] font-bold uppercase tracking-[0.28em] text-muted sm:text-[11px] sm:tracking-[0.32em]">
-          Vegas Session 3 · Event {EXPOSURE_VEGAS_EVENT_ID}
+          {EXPOSURE_EVENT_LABEL} · Event {EXPOSURE_EVENT_ID}
         </p>
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-headline text-[9px] font-semibold uppercase tracking-[0.18em] text-muted sm:text-[10px]">
@@ -148,9 +164,21 @@ function LeaderboardGrid({ data, updatedAt }: { data: ExposureStatisticsResponse
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">
         {data.StatisticSummaries.map((category) => (
-          <StatCategoryCard key={category.Abbr} category={category} />
+          <StatCategoryCard key={category.Abbr} category={category} expanded={expanded} />
         ))}
       </div>
+
+      {canShowMore ? (
+        <div className="mt-5 flex justify-center sm:mt-6">
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="rounded-full border border-black/[0.12] bg-paper px-5 py-2.5 font-headline text-[11px] font-extrabold uppercase tracking-[0.2em] text-ink transition hover:border-gold/50 hover:bg-gold/10"
+          >
+            {expanded ? "Show Less" : `Show More · Top ${maxRows}`}
+          </button>
+        </div>
+      ) : null}
 
       <p className="mt-5 text-center text-[10px] font-medium text-muted sm:mt-6 sm:text-[11px]">
         Official statistics via{" "}
@@ -169,7 +197,7 @@ function LeaderboardGrid({ data, updatedAt }: { data: ExposureStatisticsResponse
 
 export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboardEmbedProps) {
   void mode;
-  const [phase, setPhase] = useState<"loading" | "ready" | "fallback">("loading");
+  const [phase, setPhase] = useState<"loading" | "ready" | "error">("loading");
   const [data, setData] = useState<ExposureStatisticsResponse | null>(null);
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
 
@@ -191,14 +219,14 @@ export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboar
       } catch {
         if (!cancelled && !isRefresh) {
           window.clearTimeout(timeoutId);
-          setPhase("fallback");
+          setPhase("error");
         }
       }
     }
 
     setPhase("loading");
     timeoutId = window.setTimeout(() => {
-      if (!cancelled) setPhase((p) => (p === "loading" ? "fallback" : p));
+      if (!cancelled) setPhase((p) => (p === "loading" ? "error" : p));
     }, 12000);
 
     void loadLeaders();
@@ -214,14 +242,14 @@ export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboar
   }, []);
 
   return (
-    <div className="relative min-h-[500px] w-full">
+    <div className="relative min-h-[280px] w-full">
       {phase === "loading" ? (
         <div className="absolute inset-0 z-10 bg-paper/95 backdrop-blur-[2px]">
           <EmbedSkeleton />
         </div>
       ) : null}
 
-      {phase === "fallback" ? <FallbackTable /> : null}
+      {phase === "error" ? <ErrorState /> : null}
 
       {phase === "ready" && data && updatedAt ? <LeaderboardGrid data={data} updatedAt={updatedAt} /> : null}
     </div>

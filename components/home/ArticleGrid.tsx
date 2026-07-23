@@ -20,7 +20,7 @@ function ArticleThumb({ imageSrc, imageAlt }: Pick<NotebookItem, "imageSrc" | "i
 
   return (
     <div className="pointer-events-none relative flex h-20 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#050505] via-zinc-900 to-zinc-800 ring-1 ring-white/12 shadow-inner">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(212,180,92,0.45),transparent_55%)] opacity-90 transition duration-300 group-hover:opacity-100" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255, 79, 1,0.45),transparent_55%)] opacity-90 transition duration-300 group-hover:opacity-100" />
       <span className="relative font-headline text-[9px] font-bold uppercase tracking-[0.2em] text-gold-bright/90">
         14U
       </span>
@@ -33,8 +33,8 @@ export function ArticleGrid() {
     <section id="notebook" className="mx-auto max-w-6xl px-4 py-8 sm:px-5 sm:py-10">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
         <div>
-          <h2 className="font-headline text-xl tracking-[0.18em] text-ink">NOLA ARCHIVE</h2>
-          <p className="mt-1 text-xs font-medium text-muted">Session 2 coverage · New Orleans</p>
+          <h2 className="font-headline text-xl tracking-[0.18em] text-ink">ARCHIVE</h2>
+          <p className="mt-1 text-xs font-medium text-muted">NOLA Session 2 · Vegas Session 3</p>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4">
