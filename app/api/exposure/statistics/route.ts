@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
+import { HUB_CIRCUITS, getDivision, type HubAge } from "@/lib/hubConfig";
 import {
-  EXPOSURE_14U_DIVISION_ID,
-  EXPOSURE_EVENT_ID,
   EXPOSURE_STATISTICS_WIDGET_URL,
   type ExposureStatisticsResponse,
 } from "@/lib/exposure";
@@ -9,23 +8,26 @@ import { exposureApiGet, mapOfficialStatistics } from "@/lib/exposureServer";
 
 export const dynamic = "force-dynamic";
 
-async function fetchViaOfficialApi(): Promise<ExposureStatisticsResponse | null> {
+async function fetchViaOfficialApi(
+  eventId: number,
+  divisionId: number,
+): Promise<ExposureStatisticsResponse | null> {
   const payload = await exposureApiGet(
     "/api/v1/statistics",
-    `?eventid=${EXPOSURE_EVENT_ID}&divisionid=${EXPOSURE_14U_DIVISION_ID}&pagesize=50&categories=ppg,rpg,apg,spg,bpg,tpg`,
+    `?eventid=${eventId}&divisionid=${divisionId}&pagesize=50&categories=ppg,rpg,apg,spg,bpg,tpg`,
   );
   if (!payload) return null;
-  const mapped = mapOfficialStatistics(payload);
-  // Empty successful responses should fall through to widget fallback.
+  const mapped = mapOfficialStatistics(payload, eventId);
   if (!mapped.HasStatistics) return null;
   return mapped;
 }
 
-async function fetchViaWidget(): Promise<ExposureStatisticsResponse> {
-  const response = await fetch(EXPOSURE_STATISTICS_WIDGET_URL, {
+async function fetchViaWidget(eventId: number, divisionId: number): Promise<ExposureStatisticsResponse> {
+  const url = `https://basketball.exposureevents.com/widgets/v1/statistics?id=${eventId}&categories=ppg,rpg,apg,spg,bpg,tpg`;
+  const response = await fetch(url || EXPOSURE_STATISTICS_WIDGET_URL, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `divisionId=${EXPOSURE_14U_DIVISION_ID}`,
+    body: `divisionId=${divisionId}`,
     cache: "no-store",
   });
 
@@ -36,11 +38,18 @@ async function fetchViaWidget(): Promise<ExposureStatisticsResponse> {
   return (await response.json()) as ExposureStatisticsResponse;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    let data = await fetchViaOfficialApi();
+    const { searchParams } = new URL(request.url);
+    const circuitId = (searchParams.get("circuit") ?? "jr-eybl") as keyof typeof HUB_CIRCUITS;
+    const age = (searchParams.get("age") ?? undefined) as HubAge | undefined;
+
+    const circuit = HUB_CIRCUITS[circuitId] ?? HUB_CIRCUITS["jr-eybl"];
+    const division = getDivision(circuit, age ?? circuit.defaultAge);
+
+    let data = await fetchViaOfficialApi(circuit.eventId, division.divisionId);
     if (!data) {
-      data = await fetchViaWidget();
+      data = await fetchViaWidget(circuit.eventId, division.divisionId);
     }
 
     return NextResponse.json(data, {

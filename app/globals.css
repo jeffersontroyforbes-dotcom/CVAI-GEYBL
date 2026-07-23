@@ -30,7 +30,7 @@
 
   /*
    * Nike / GEYBL iframe: content-only surface (no site chrome).
-   * Standalone pages ignore these rules unless data-embed is set.
+   * Triggered by iframe sniff or ?embed=1 — see EmbedDetect.
    */
   html[data-embed="true"] {
     overflow-x: clip;
@@ -53,18 +53,29 @@
 
   html[data-embed="true"] .page-shell {
     padding-top: 0;
-    padding-bottom: 1rem;
+    padding-bottom: 0;
   }
 
   html[data-embed="true"] .page-shell > main {
     min-width: 0;
   }
 
-  html[data-embed="true"] #hub {
+  /* Hero: keep art, cap height so the iframe isn't all poster */
+  html[data-embed="true"] #hub.hub-hero {
     max-width: none;
     width: 100%;
     margin-inline: 0;
     padding: 0;
+  }
+
+  html[data-embed="true"] #hub .hub-hero-frame {
+    aspect-ratio: auto;
+    max-height: min(58vh, 480px);
+    width: 100%;
+    border-radius: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    box-shadow: none;
   }
 
   html[data-embed="true"] #hub a {
@@ -74,31 +85,46 @@
     --tw-ring-offset-color: transparent;
   }
 
+  /* Age tabs: sticky strip inside the frame */
+  html[data-embed="true"] .age-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    max-width: none;
+    width: 100%;
+    margin-inline: 0;
+    padding: 0.65rem 0.75rem 0.75rem;
+    background-color: rgba(250, 250, 250, 0.96);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(8px);
+  }
+
   html[data-embed="true"] .page-shell > main > section {
     max-width: none;
     width: 100%;
     margin-inline: 0;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-top: 0.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.75rem;
     padding-bottom: 1.25rem;
   }
 
   html[data-embed="true"] .page-shell > main > section:first-of-type {
-    padding-top: 0.25rem;
+    padding-top: 0.5rem;
   }
 
   html[data-embed="true"] .page-shell > footer {
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
   }
 
   html[data-embed="true"] .page-shell > footer > div {
     max-width: none;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
   }
+
   ::selection {
     background-color: rgba(255, 79, 1, 0.38);
     color: #000000;

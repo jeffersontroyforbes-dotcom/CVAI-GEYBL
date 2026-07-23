@@ -1,23 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  EXPOSURE_14U_DIVISION_NAME,
-  EXPOSURE_EVENT_ID,
-  EXPOSURE_EVENT_LABEL,
-  type ExposureStatisticsResponse,
-  type ExposureStatCategory,
-} from "@/lib/exposure";
+import type { HubAge, HubCircuitConfig } from "@/lib/hubConfig";
+import { stripDivisionSuffix } from "@/lib/hubConfig";
+import type { ExposureStatisticsResponse, ExposureStatCategory } from "@/lib/exposure";
 
 const EXPOSURE_BASE = "https://basketball.exposureevents.com";
-/** Matches Exposure widget default before "Show More". */
 const LEADERS_PREVIEW = 10;
 const REFRESH_MS = 60_000;
 
-export type LeaderboardMode = "daily" | "season";
-
 type ExposureLeaderboardEmbedProps = {
-  mode?: LeaderboardMode;
+  circuitId: HubCircuitConfig["id"];
+  age: HubAge;
+  eventLabel: string;
+  eventId: number;
+  divisionName: string;
 };
 
 function SkeletonBar({ className }: { className?: string }) {
@@ -57,18 +54,18 @@ function EmbedSkeleton() {
   );
 }
 
-function WaitingForTip() {
+function WaitingForTip({ eventId }: { eventId: number }) {
   return (
     <div className="rounded-xl border border-black/[0.08] bg-panel/40 px-4 py-10 text-center sm:px-6 sm:py-12">
       <p className="font-headline text-xs font-extrabold uppercase tracking-[0.28em] text-ink sm:text-sm">
         Leaders unlock after tip
       </p>
       <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
-        Nike Nationals 14 Jr. EYBL stats will fill here live once games tip Friday at McCormick Place.
-        Schedule, standings, and matchups below are already live.
+        Division stats will fill here live once games tip. Schedule, standings, and matchups below are
+        already live.
       </p>
       <a
-        href={`https://basketball.exposureevents.com/widgets/v1/statistics?eventid=${EXPOSURE_EVENT_ID}`}
+        href={`https://basketball.exposureevents.com/widgets/v1/statistics?eventid=${eventId}`}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-5 inline-flex rounded-full bg-gold px-4 py-2 font-headline text-[10px] font-bold uppercase tracking-[0.18em] text-ink"
@@ -82,7 +79,7 @@ function WaitingForTip() {
 function ErrorState() {
   return (
     <div className="rounded-xl border border-black/[0.08] bg-panel/40 px-4 py-8 text-center">
-      <p className="text-sm font-semibold text-ink">Couldn’t reach Exposure stats</p>
+      <p className="text-sm font-semibold text-ink">Couldn&apos;t reach Exposure stats</p>
       <p className="mt-2 text-xs text-muted">Check connection and try refreshing the page.</p>
     </div>
   );
@@ -91,9 +88,11 @@ function ErrorState() {
 function StatCategoryCard({
   category,
   expanded,
+  divisionName,
 }: {
   category: ExposureStatCategory;
   expanded: boolean;
+  divisionName: string;
 }) {
   const leaders = expanded ? category.Value : category.Value.slice(0, LEADERS_PREVIEW);
 
@@ -121,7 +120,7 @@ function StatCategoryCard({
                   {leader.Name}
                 </span>
                 <span className="mt-0.5 block truncate text-[10px] text-muted sm:text-[11px]">
-                  {leader.TeamName.replace(/ 14 Jr\. EYBL$/, "")}
+                  {stripDivisionSuffix(leader.TeamName, divisionName)}
                 </span>
               </span>
               <span className="shrink-0 pt-0.5 font-headline text-xs font-extrabold tabular-nums text-ink sm:text-sm">
@@ -135,11 +134,23 @@ function StatCategoryCard({
   );
 }
 
-function LeaderboardGrid({ data, updatedAt }: { data: ExposureStatisticsResponse; updatedAt: Date }) {
+function LeaderboardGrid({
+  data,
+  updatedAt,
+  eventLabel,
+  eventId,
+  divisionName,
+}: {
+  data: ExposureStatisticsResponse;
+  updatedAt: Date;
+  eventLabel: string;
+  eventId: number;
+  divisionName: string;
+}) {
   const [expanded, setExpanded] = useState(false);
 
   if (!data.HasStatistics || data.StatisticSummaries.length === 0) {
-    return <WaitingForTip />;
+    return <WaitingForTip eventId={eventId} />;
   }
 
   const updatedLabel = updatedAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
@@ -150,21 +161,26 @@ function LeaderboardGrid({ data, updatedAt }: { data: ExposureStatisticsResponse
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-black/[0.08] pb-3 sm:mb-5">
         <p className="font-headline text-[10px] font-bold uppercase tracking-[0.28em] text-muted sm:text-[11px] sm:tracking-[0.32em]">
-          {EXPOSURE_EVENT_LABEL} · Event {EXPOSURE_EVENT_ID}
+          {eventLabel} · Event {eventId}
         </p>
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-headline text-[9px] font-semibold uppercase tracking-[0.18em] text-muted sm:text-[10px]">
             Updated {updatedLabel}
           </span>
           <span className="inline-flex rounded-full border border-gold/45 bg-ink px-3 py-1 font-headline text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold-bright sm:text-[11px]">
-            {EXPOSURE_14U_DIVISION_NAME}
+            {divisionName}
           </span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">
         {data.StatisticSummaries.map((category) => (
-          <StatCategoryCard key={category.Abbr} category={category} expanded={expanded} />
+          <StatCategoryCard
+            key={category.Abbr}
+            category={category}
+            expanded={expanded}
+            divisionName={divisionName}
+          />
         ))}
       </div>
 
@@ -195,8 +211,13 @@ function LeaderboardGrid({ data, updatedAt }: { data: ExposureStatisticsResponse
   );
 }
 
-export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboardEmbedProps) {
-  void mode;
+export function ExposureLeaderboardEmbed({
+  circuitId,
+  age,
+  eventLabel,
+  eventId,
+  divisionName,
+}: ExposureLeaderboardEmbedProps) {
   const [phase, setPhase] = useState<"loading" | "ready" | "error">("loading");
   const [data, setData] = useState<ExposureStatisticsResponse | null>(null);
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
@@ -208,7 +229,10 @@ export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboar
 
     async function loadLeaders(isRefresh = false) {
       try {
-        const response = await fetch("/api/exposure/statistics", { cache: "no-store" });
+        const response = await fetch(
+          `/api/exposure/statistics?circuit=${circuitId}&age=${age}`,
+          { cache: "no-store" },
+        );
         if (!response.ok) throw new Error("statistics fetch failed");
         const payload = (await response.json()) as ExposureStatisticsResponse;
         if (cancelled) return;
@@ -239,7 +263,7 @@ export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboar
       window.clearTimeout(timeoutId);
       window.clearInterval(intervalId);
     };
-  }, []);
+  }, [circuitId, age]);
 
   return (
     <div className="relative min-h-[280px] w-full">
@@ -251,7 +275,15 @@ export function ExposureLeaderboardEmbed({ mode = "season" }: ExposureLeaderboar
 
       {phase === "error" ? <ErrorState /> : null}
 
-      {phase === "ready" && data && updatedAt ? <LeaderboardGrid data={data} updatedAt={updatedAt} /> : null}
+      {phase === "ready" && data && updatedAt ? (
+        <LeaderboardGrid
+          data={data}
+          updatedAt={updatedAt}
+          eventLabel={eventLabel}
+          eventId={eventId}
+          divisionName={divisionName}
+        />
+      ) : null}
     </div>
   );
 }

@@ -1,12 +1,15 @@
-import {
-  EXPOSURE_14U_DIVISION_ID,
-  EXPOSURE_EVENT_ID,
-  type ExposureStatisticsResponse,
-} from "./exposure";
+import { stripDivisionSuffix } from "./hubConfig";
+import type { ExposureStatisticsResponse } from "./exposure";
 import { exposureApiGet, mapOfficialStatistics } from "./exposureServer";
 import type { HubGame, HubPool, NationalsHubPayload } from "./nationalsTypes";
 
 export type { HubGame, NationalsHubPayload } from "./nationalsTypes";
+
+export type HubBuildOptions = {
+  eventId: number;
+  divisionId: number;
+  divisionName: string;
+};
 
 type RawGame = {
   Id: number;
@@ -71,7 +74,7 @@ function mapGame(raw: RawGame): HubGame {
   };
 }
 
-async function fetchAllGames(): Promise<HubGame[]> {
+async function fetchAllGames(eventId: number, divisionId: number): Promise<HubGame[]> {
   const games: HubGame[] = [];
   let page = 1;
   let total = Infinity;
@@ -79,7 +82,7 @@ async function fetchAllGames(): Promise<HubGame[]> {
   while (games.length < total && page <= 10) {
     const payload = await exposureApiGet(
       "/api/v1/games",
-      `?eventid=${EXPOSURE_EVENT_ID}&divisionid=${EXPOSURE_14U_DIVISION_ID}&pagesize=50&page=${page}`,
+      `?eventid=${eventId}&divisionid=${divisionId}&pagesize=50&page=${page}`,
     );
     if (!payload) break;
 
@@ -93,10 +96,13 @@ async function fetchAllGames(): Promise<HubGame[]> {
   return games.sort((a, b) => a.sortKey - b.sortKey);
 }
 
-async function fetchStandings(): Promise<NationalsHubPayload["standings"]> {
+async function fetchStandings(
+  eventId: number,
+  divisionId: number,
+): Promise<NationalsHubPayload["standings"]> {
   const payload = await exposureApiGet(
     "/api/v1/standings",
-    `?eventid=${EXPOSURE_EVENT_ID}&divisionid=${EXPOSURE_14U_DIVISION_ID}&display=Pool`,
+    `?eventid=${eventId}&divisionid=${divisionId}&display=Pool`,
   );
 
   if (!payload) {
@@ -129,20 +135,24 @@ async function fetchStandings(): Promise<NationalsHubPayload["standings"]> {
   return { columns, pools };
 }
 
-async function fetchLeaders(): Promise<ExposureStatisticsResponse> {
+async function fetchLeaders(
+  eventId: number,
+  divisionId: number,
+): Promise<ExposureStatisticsResponse> {
   const payload = await exposureApiGet(
     "/api/v1/statistics",
-    `?eventid=${EXPOSURE_EVENT_ID}&divisionid=${EXPOSURE_14U_DIVISION_ID}&pagesize=50&categories=ppg,rpg,apg,spg,bpg,tpg`,
+    `?eventid=${eventId}&divisionid=${divisionId}&pagesize=50&categories=ppg,rpg,apg,spg,bpg,tpg`,
   );
   if (!payload) {
     return { HasStatistics: false, StatisticSummaries: [] };
   }
-  return mapOfficialStatistics(payload);
+  return mapOfficialStatistics(payload, eventId);
 }
 
 function buildWatch(
   games: HubGame[],
   leaders: ExposureStatisticsResponse,
+  divisionName: string,
 ): NationalsHubPayload["watch"] {
   const next = games.filter((g) => g.status === "scheduled").slice(0, 8);
   const opening = games.filter((g) => g.date.includes("7/24")).slice(0, 6);
@@ -161,7 +171,7 @@ function buildWatch(
 
   const hotHand = ppg.slice(0, 5).map((p) => ({
     name: p.Name,
-    team: p.TeamName.replace(/ 14 Jr\. EYBL$/, ""),
+    team: stripDivisionSuffix(p.TeamName, divisionName),
     stat: p.Display,
     label: "PPG",
   }));
@@ -170,7 +180,7 @@ function buildWatch(
     ppg.length > 0
       ? ppg.slice(0, 3).map((p) => ({
           title: p.Name,
-          detail: `${p.Display} PPG · ${p.TeamName.replace(/ 14 Jr\. EYBL$/, "")} — early scoring form.`,
+          detail: `${p.Display} PPG · ${stripDivisionSuffix(p.TeamName, divisionName)} — early scoring form.`,
         }))
       : opening.slice(0, 3).map((g) => ({
           title: `${g.home.name} vs ${g.away.name}`,
@@ -182,13 +192,13 @@ function buildWatch(
       ? [
           ...apg.slice(0, 2).map((p) => ({
             name: p.Name,
-            team: p.TeamName.replace(/ 14 Jr\. EYBL$/, ""),
+            team: stripDivisionSuffix(p.TeamName, divisionName),
             value: p.Display,
             label: "APG",
           })),
           ...spg.slice(0, 2).map((p) => ({
             name: p.Name,
-            team: p.TeamName.replace(/ 14 Jr\. EYBL$/, ""),
+            team: stripDivisionSuffix(p.TeamName, divisionName),
             value: p.Display,
             label: "SPG",
           })),
@@ -198,11 +208,15 @@ function buildWatch(
   return { matchups, stockUp, hotHand, efficiency };
 }
 
-export async function buildNationalsHub(): Promise<NationalsHubPayload> {
+export async function buildNationalsHub(
+  options: HubBuildOptions,
+): Promise<NationalsHubPayload> {
+  const { eventId, divisionId, divisionName } = options;
+
   const [games, standings, leaders] = await Promise.all([
-    fetchAllGames(),
-    fetchStandings(),
-    fetchLeaders(),
+    fetchAllGames(eventId, divisionId),
+    fetchStandings(eventId, divisionId),
+    fetchLeaders(eventId, divisionId),
   ]);
 
   const now = Date.now();
@@ -214,8 +228,8 @@ export async function buildNationalsHub(): Promise<NationalsHubPayload> {
 
   return {
     updatedAt: new Date().toISOString(),
-    eventId: EXPOSURE_EVENT_ID,
-    divisionId: EXPOSURE_14U_DIVISION_ID,
+    eventId,
+    divisionId,
     games: {
       nextTips: fallbackTips,
       recentFinals: finals.slice(-8).reverse(),
@@ -224,6 +238,6 @@ export async function buildNationalsHub(): Promise<NationalsHubPayload> {
     },
     standings,
     leaders,
-    watch: buildWatch(games, leaders),
+    watch: buildWatch(games, leaders, divisionName),
   };
 }

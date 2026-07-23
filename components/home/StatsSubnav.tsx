@@ -4,7 +4,7 @@ const links = [
   { label: "Scoreboard", href: "#scoreboard" },
   { label: "Standings", href: "#standings" },
   { label: "Matchups", href: "#matchups" },
-  { label: "Stock Up", href: "#stock" },
+  { label: "Watch List", href: "#watch-list" },
 ];
 
 export function StatsSubnav() {

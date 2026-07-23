@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import type { HubAge, HubCircuitConfig } from "@/lib/hubConfig";
 import type { HubGame, NationalsHubPayload } from "@/lib/nationalsTypes";
 
 const REFRESH_MS = 60_000;
 
-function useNationalsHub() {
+function useNationalsHub(circuitId: HubCircuitConfig["id"], age: HubAge) {
   const [data, setData] = useState<NationalsHubPayload | null>(null);
   const [phase, setPhase] = useState<"loading" | "ready" | "error">("loading");
 
@@ -15,7 +16,10 @@ function useNationalsHub() {
 
     async function load(isRefresh = false) {
       try {
-        const res = await fetch("/api/exposure/nationals", { cache: "no-store" });
+        const res = await fetch(
+          `/api/exposure/nationals?circuit=${circuitId}&age=${age}`,
+          { cache: "no-store" },
+        );
         if (!res.ok) throw new Error("hub fetch failed");
         const payload = (await res.json()) as NationalsHubPayload;
         if (cancelled) return;
@@ -26,6 +30,7 @@ function useNationalsHub() {
       }
     }
 
+    setPhase("loading");
     void load();
     intervalId = window.setInterval(() => void load(true), REFRESH_MS);
 
@@ -33,7 +38,7 @@ function useNationalsHub() {
       cancelled = true;
       window.clearInterval(intervalId);
     };
-  }, []);
+  }, [circuitId, age]);
 
   return { data, phase };
 }
@@ -288,11 +293,11 @@ function EfficiencyBlock({ data }: { data: NationalsHubPayload }) {
 
 function StockWatchBlock({ data }: { data: NationalsHubPayload }) {
   return (
-    <SectionShell id="stock" eyebrow="CVAI Signature" title="Stock Up">
+    <SectionShell id="watch-list" eyebrow="CVAI Signature" title="Watch List">
       <div className="overflow-hidden rounded-2xl border border-gold/40 bg-paper shadow-liftCard">
         <div className="border-b border-gold/30 bg-gold/15 px-4 py-3">
           <p className="font-headline text-xs font-extrabold uppercase tracking-[0.28em] text-ink">
-            Rising · Watch List
+            Rising · Names to Track
           </p>
         </div>
         <ul className="divide-y divide-black/[0.07]">
@@ -321,8 +326,14 @@ function ModulesSkeleton() {
   );
 }
 
-export function NationalsLiveModules() {
-  const { data, phase } = useNationalsHub();
+export function NationalsLiveModules({
+  circuitId,
+  age,
+}: {
+  circuitId: HubCircuitConfig["id"];
+  age: HubAge;
+}) {
+  const { data, phase } = useNationalsHub(circuitId, age);
 
   if (phase === "loading") return <ModulesSkeleton />;
   if (phase === "error" || !data) {

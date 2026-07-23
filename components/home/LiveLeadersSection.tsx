@@ -1,6 +1,15 @@
 import { ExposureLeaderboardEmbed } from "./ExposureLeaderboardEmbed";
+import type { HubAge, HubCircuitConfig } from "@/lib/hubConfig";
+import { getDivision } from "@/lib/hubConfig";
 
-export function LiveLeadersSection() {
+type LiveLeadersSectionProps = {
+  circuit: HubCircuitConfig;
+  age: HubAge;
+};
+
+export function LiveLeadersSection({ circuit, age }: LiveLeadersSectionProps) {
+  const division = getDivision(circuit, age);
+
   return (
     <section
       id="leaders"
@@ -9,7 +18,7 @@ export function LiveLeadersSection() {
     >
       <div className="flex flex-col gap-1">
         <p className="font-headline text-[10px] font-bold uppercase tracking-[0.42em] text-ink sm:text-[11px] sm:tracking-[0.46em]">
-          NIKE NATIONALS · 14U
+          {circuit.eventLabel.toUpperCase()}
         </p>
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h2
@@ -26,7 +35,7 @@ export function LiveLeadersSection() {
           className="inline-flex rounded-full bg-gold px-5 py-2.5 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_0_26px_-6px_rgba(255, 79, 1,0.55)] ring-1 ring-gold-bright sm:px-6 sm:py-3 sm:text-[11px] sm:tracking-[0.24em]"
           aria-label="Event leaders"
         >
-          Event Leaders
+          {division.label} · Event Leaders
         </span>
       </div>
 
@@ -35,7 +44,7 @@ export function LiveLeadersSection() {
           <div className="flex min-w-0 items-center gap-3">
             <span className="relative flex h-2.5 w-2.5 shrink-0">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-bright/60 opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gold shadow-[0_0_0_3px_rgba(255, 79, 1,0.35),0_0_22px_rgba(255, 138, 77,0.55)]" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gold shadow-[0_0_0_3px_rgba(255, 79, 1,0.35),0_0_22px_rgba(255, 106, 40,0.55)]" />
             </span>
             <p className="truncate font-headline text-xs font-extrabold uppercase tracking-[0.32em] text-ink sm:text-sm sm:tracking-[0.34em]">
               CVAI LEADERBOARD
@@ -44,14 +53,20 @@ export function LiveLeadersSection() {
           <span className="inline-flex shrink-0 items-center gap-2 rounded-md border border-gold/55 bg-ink px-3 py-1.5 font-headline text-[10px] font-extrabold uppercase tracking-[0.28em] text-gold-bright shadow-[0_0_24px_-6px_rgba(255, 79, 1,0.45),inset_0_1px_0_rgba(255,255,255,0.08)] sm:px-3.5 sm:text-[11px] sm:tracking-[0.3em]">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-bright/70 opacity-80" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-bright shadow-[0_0_12px_rgba(255, 138, 77,0.9)]" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-bright shadow-[0_0_12px_rgba(255, 106, 40,0.9)]" />
             </span>
             LIVE
           </span>
         </div>
 
         <div className="p-3 sm:p-5">
-          <ExposureLeaderboardEmbed />
+          <ExposureLeaderboardEmbed
+            circuitId={circuit.id}
+            age={age}
+            eventLabel={circuit.eventLabel}
+            eventId={circuit.eventId}
+            divisionName={division.divisionName}
+          />
         </div>
       </div>
     </section>

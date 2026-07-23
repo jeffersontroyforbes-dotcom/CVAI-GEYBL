@@ -10,6 +10,17 @@ const nextConfig: NextConfig = {
      */
     unoptimized: true,
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          // Allow Nike / Alex to iframe the hubs (omit X-Frame-Options; use CSP only)
+          { key: "Content-Security-Policy", value: "frame-ancestors *" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
