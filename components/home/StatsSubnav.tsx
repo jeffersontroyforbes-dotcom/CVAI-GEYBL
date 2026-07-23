@@ -1,28 +1,28 @@
 const links = [
-  { label: "Stats Hub", href: "#hub", active: true },
+  { label: "Hub", href: "#hub", active: true },
   { label: "Leaders", href: "#leaders" },
-  { label: "Scoreboard", href: "#scoreboard" },
+  { label: "Scores", href: "#scoreboard" },
   { label: "Standings", href: "#standings" },
   { label: "Matchups", href: "#matchups" },
-  { label: "Watch List", href: "#watch-list" },
+  { label: "Watch", href: "#watch-list" },
 ];
 
 export function StatsSubnav() {
   return (
     <nav
       aria-label="Stats navigation"
-      className="stats-subnav relative z-40 border-b border-black/[0.07] bg-white shadow-[0_4px_14px_-8px_rgba(0,0,0,0.12)]"
+      className="stats-subnav relative z-40 border-b border-black/[0.07] bg-white"
     >
-      <div className="mx-auto max-w-6xl min-w-0 px-4 sm:px-5">
-        <div className="stats-subnav-inner scrollbar-none flex min-h-[2.85rem] w-full min-w-0 flex-nowrap items-center justify-between gap-2 overflow-x-auto overscroll-x-contain py-2.5 sm:min-h-[2.75rem] sm:justify-start sm:gap-5 sm:py-2.5">
+      <div className="mx-auto max-w-6xl min-w-0 px-1.5 sm:px-5">
+        <div className="stats-subnav-inner scrollbar-none flex min-h-0 w-full min-w-0 flex-nowrap items-center justify-start gap-0.5 overflow-x-auto overscroll-x-contain py-1 sm:gap-2 sm:py-2">
           {links.map((l) => (
             <a
-              key={l.label}
+              key={l.href}
               href={l.href}
-              className={`shrink-0 snap-start whitespace-nowrap font-headline text-[11px] font-bold uppercase leading-tight tracking-[0.1em] transition sm:rounded-full sm:px-5 sm:py-2.5 sm:text-xs sm:tracking-[0.16em] ${
+              className={`shrink-0 snap-start whitespace-nowrap font-headline font-extrabold uppercase leading-none tracking-[0.04em] transition sm:tracking-[0.12em] ${
                 l.active
-                  ? "rounded-full bg-ink px-4 py-2 text-paper ring-1 ring-gold/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_0_24px_-4px_rgba(255, 79, 1,0.42)] sm:px-5 sm:py-2.5"
-                  : "max-sm:rounded-none px-2 py-2 text-ink hover:text-ink/70 sm:px-5 sm:py-2.5"
+                  ? "rounded-full bg-ink px-2 py-1 text-[9px] text-paper ring-1 ring-gold/50 sm:px-4 sm:py-2 sm:text-[11px]"
+                  : "rounded-full px-2 py-1 text-[9px] text-ink/75 hover:bg-black/[0.04] hover:text-ink sm:px-3.5 sm:py-2 sm:text-[11px]"
               }`}
             >
               {l.label}
