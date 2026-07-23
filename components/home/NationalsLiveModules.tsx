@@ -288,38 +288,21 @@ function EfficiencyBlock({ data }: { data: NationalsHubPayload }) {
 
 function StockWatchBlock({ data }: { data: NationalsHubPayload }) {
   return (
-    <SectionShell id="stock" eyebrow="CVAI Signature" title="Stock Up / Stock Down">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="overflow-hidden rounded-2xl border border-gold/40 bg-paper shadow-liftCard">
-          <div className="border-b border-gold/30 bg-gold/15 px-4 py-3">
-            <p className="font-headline text-xs font-extrabold uppercase tracking-[0.28em] text-ink">
-              Stock Up
-            </p>
-          </div>
-          <ul className="divide-y divide-black/[0.07]">
-            {data.watch.stockUp.map((item) => (
-              <li key={item.title} className="px-4 py-3.5">
-                <p className="text-sm font-semibold text-ink">{item.title}</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted">{item.detail}</p>
-              </li>
-            ))}
-          </ul>
+    <SectionShell id="stock" eyebrow="CVAI Signature" title="Stock Up">
+      <div className="overflow-hidden rounded-2xl border border-gold/40 bg-paper shadow-liftCard">
+        <div className="border-b border-gold/30 bg-gold/15 px-4 py-3">
+          <p className="font-headline text-xs font-extrabold uppercase tracking-[0.28em] text-ink">
+            Rising · Watch List
+          </p>
         </div>
-        <div className="overflow-hidden rounded-2xl border border-black/[0.12] bg-paper shadow-liftCard">
-          <div className="border-b border-black/[0.08] bg-ink px-4 py-3">
-            <p className="font-headline text-xs font-extrabold uppercase tracking-[0.28em] text-gold-bright">
-              Stock Down
-            </p>
-          </div>
-          <ul className="divide-y divide-black/[0.07]">
-            {data.watch.stockDown.map((item) => (
-              <li key={item.title} className="px-4 py-3.5">
-                <p className="text-sm font-semibold text-ink">{item.title}</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted">{item.detail}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className="divide-y divide-black/[0.07]">
+          {data.watch.stockUp.map((item) => (
+            <li key={item.title} className="px-4 py-3.5 sm:px-5">
+              <p className="text-sm font-semibold text-ink">{item.title}</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted">{item.detail}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </SectionShell>
   );

@@ -55,7 +55,6 @@ export type NationalsHubPayload = {
       why: string;
     }>;
     stockUp: Array<{ title: string; detail: string }>;
-    stockDown: Array<{ title: string; detail: string }>;
     hotHand: Array<{ name: string; team: string; stat: string; label: string }>;
     efficiency: Array<{ name: string; team: string; value: string; label: string }>;
   };

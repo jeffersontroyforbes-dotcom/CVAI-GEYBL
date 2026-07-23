@@ -177,27 +177,6 @@ function buildWatch(
           detail: `Opening tip ${g.time} · Pool ${g.home.pool || g.away.pool || "—"} · ${g.court}`,
         }));
 
-  const stockDown =
-    leaders.HasStatistics && leaders.StatisticSummaries.find((c) => c.Abbr === "TPG")
-      ? (leaders.StatisticSummaries.find((c) => c.Abbr === "TPG")?.Value ?? []).slice(0, 3).map((p) => ({
-          title: p.Name,
-          detail: `${p.Display} TPG · watch ball security under Nationals pace.`,
-        }))
-      : [
-          {
-            title: "Early foul trouble",
-            detail: "Opening day physicality at McCormick — teams that dig early hole dig deep.",
-          },
-          {
-            title: "Cold starts",
-            detail: "First round pool games punish slow half-court offense. Tempo winners rise fast.",
-          },
-          {
-            title: "Turnover storms",
-            detail: "Press-heavy 14U pools punish careless outlets — protect the rock early.",
-          },
-        ];
-
   const efficiency =
     apg.length || spg.length
       ? [
@@ -216,7 +195,7 @@ function buildWatch(
         ]
       : [];
 
-  return { matchups, stockUp, stockDown, hotHand, efficiency };
+  return { matchups, stockUp, hotHand, efficiency };
 }
 
 export async function buildNationalsHub(): Promise<NationalsHubPayload> {
