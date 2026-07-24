@@ -116,8 +116,12 @@ function ScoreboardBlock({ data }: { data: NationalsHubPayload }) {
   const finals = data.games.recentFinals;
 
   return (
-    <SectionShell id="scoreboard" eyebrow="Nike Nationals · 14U" title="Scoreboard & Next Tips">
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <SectionShell
+      id="scoreboard"
+      eyebrow={`Nike Nationals · ${data.divisionName}`}
+      title="Scoreboard & Next Tips"
+    >
+      <div className="scoreboard-grid grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="overflow-hidden rounded-2xl border border-black/[0.1] bg-paper shadow-liftCard">
           <div className="border-b border-black/[0.08] bg-panel/60 px-4 py-3">
             <p className="font-headline text-xs font-extrabold uppercase tracking-[0.28em] text-ink">

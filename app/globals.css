@@ -60,22 +60,39 @@
     min-width: 0;
   }
 
-  /* Hero: keep art, cap height so the iframe isn't all poster */
+  /* Hero: match standalone mobile treatment (full-width poster, not a desktop card) */
   html[data-embed="true"] #hub.hub-hero {
     max-width: none;
     width: 100%;
     margin-inline: 0;
-    padding: 0;
+    padding: 0.5rem 0.65rem 0.35rem;
   }
 
   html[data-embed="true"] #hub .hub-hero-frame {
-    aspect-ratio: auto;
-    max-height: min(58vh, 480px);
     width: 100%;
-    border-radius: 0;
-    border-left-width: 0;
-    border-right-width: 0;
+    max-height: none;
+    border-radius: 1rem;
+    border-width: 1px;
     box-shadow: none;
+  }
+
+  html[data-embed="true"] #hub .hub-hero-frame img {
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  html[data-embed="true"] #leaders {
+    padding-top: 0.35rem;
+    padding-bottom: 0.85rem;
+  }
+
+  html[data-embed="true"] #leaders h2 {
+    font-size: 1.55rem;
+    letter-spacing: 0.06em;
+  }
+
+  html[data-embed="true"] #scoreboard .scoreboard-grid {
+    grid-template-columns: 1fr;
   }
 
   html[data-embed="true"] #hub a {

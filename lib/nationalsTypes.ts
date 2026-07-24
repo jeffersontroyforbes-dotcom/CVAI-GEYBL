@@ -38,6 +38,7 @@ export type NationalsHubPayload = {
   updatedAt: string;
   eventId: number;
   divisionId: number;
+  divisionName: string;
   games: {
     nextTips: HubGame[];
     recentFinals: HubGame[];

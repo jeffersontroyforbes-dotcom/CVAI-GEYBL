@@ -23,16 +23,23 @@ export function CircuitHubPage({ circuitId }: CircuitHubPageProps) {
     <div className="page-shell min-w-0 overflow-x-clip pb-12 sm:pb-14">
       <EmbedAutoHeight />
       <div className="site-chrome sticky top-0 z-50 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.35)]">
-        <SiteHeader />
+        <SiteHeader logoSrc={circuit.logoSrc} logoAlt={circuit.logoAlt} />
       </div>
       <main>
-        <HeroArticle imageSrc={circuit.heroSrc} imageAlt={circuit.heroAlt} />
+        <HeroArticle
+          imageSrc={circuit.heroSrc}
+          imageAlt={circuit.heroAlt}
+          title={circuit.heroTitle}
+          subtitle={circuit.heroSubtitle}
+          league={circuit.heroLeague}
+          year={circuit.heroYear}
+        />
         <AgeTabs circuit={circuit} age={age} onChange={setAge} />
         <LiveLeadersSection circuit={circuit} age={age} />
         <NationalsLiveModules circuitId={circuitId} age={age} />
         <ContactSection />
       </main>
-      <SiteFooter />
+      <SiteFooter logoSrc={circuit.logoSrc} logoAlt={circuit.logoAlt} />
     </div>
   );
 }

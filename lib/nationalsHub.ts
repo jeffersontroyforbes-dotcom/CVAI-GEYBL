@@ -230,6 +230,7 @@ export async function buildNationalsHub(
     updatedAt: new Date().toISOString(),
     eventId,
     divisionId,
+    divisionName,
     games: {
       nextTips: fallbackTips,
       recentFinals: finals.slice(-8).reverse(),

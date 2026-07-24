@@ -13,8 +13,16 @@ export type HubCircuitConfig = {
   shortName: string;
   eventId: number;
   eventLabel: string;
-  heroSrc: string;
-  heroAlt: string;
+  /** Poster image. Omit to use typographic banner (no AI logo art). */
+  heroSrc?: string;
+  heroAlt?: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  heroLeague?: string;
+  heroYear?: string;
+  /** Official circuit mark only — never AI-generated. */
+  logoSrc?: string;
+  logoAlt?: string;
   path: string;
   ages: HubDivisionConfig[];
   defaultAge: HubAge;
@@ -29,6 +37,8 @@ export const HUB_CIRCUITS: Record<HubCircuitConfig["id"], HubCircuitConfig> = {
     eventLabel: "Nike Nationals · Jr. EYBL · Chicago",
     heroSrc: "/cvai-chicago-hero.png",
     heroAlt: "EYBL Chicago — CourtVision AI Coverage 2026 Nike Nationals Jr. EYBL",
+    logoSrc: "/logos/eybl-logo.png",
+    logoAlt: "Nike EYBL",
     path: "/",
     defaultAge: "14",
     ages: [
@@ -48,6 +58,8 @@ export const HUB_CIRCUITS: Record<HubCircuitConfig["id"], HubCircuitConfig> = {
     eventLabel: "Nike Nationals · EYBL · Chicago",
     heroSrc: "/cvai-eybl-hero.png",
     heroAlt: "EYBL Chicago — Nike Elite Youth Basketball League 2026",
+    logoSrc: "/logos/eybl-logo.png",
+    logoAlt: "Nike EYBL",
     path: "/eybl",
     defaultAge: "17",
     ages: [
@@ -62,8 +74,11 @@ export const HUB_CIRCUITS: Record<HubCircuitConfig["id"], HubCircuitConfig> = {
     shortName: "EYCL",
     eventId: 272747,
     eventLabel: "Nike Nationals · EYCL · Chicago",
-    heroSrc: "/cvai-eycl-hero.png",
-    heroAlt: "EYCL Chicago — Nike Elite Youth Championship League 2026",
+    // No AI poster / no AI logo — typographic banner only until official assets land
+    heroTitle: "EYCL",
+    heroSubtitle: "Chicago",
+    heroLeague: "Nike Elite Youth Championship League",
+    heroYear: "2026",
     path: "/eycl",
     defaultAge: "17",
     ages: [

@@ -57,19 +57,18 @@ function EmbedSkeleton() {
 
 function WaitingForTip({ eventId }: { eventId: number }) {
   return (
-    <div className="rounded-xl border border-black/[0.08] bg-panel/40 px-4 py-10 text-center sm:px-6 sm:py-12">
+    <div className="rounded-xl border border-black/[0.08] bg-panel/40 px-4 py-5 text-center sm:px-5 sm:py-6">
       <p className="font-headline text-xs font-extrabold uppercase tracking-[0.28em] text-ink sm:text-sm">
         Leaders unlock after tip
       </p>
-      <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
-        Division stats will fill here live once games tip. Schedule, standings, and matchups below are
-        already live.
+      <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">
+        Stats fill live once games tip. Schedule &amp; standings below are already live.
       </p>
       <a
         href={`https://basketball.exposureevents.com/widgets/v1/statistics?eventid=${eventId}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-5 inline-flex rounded-full bg-gold px-4 py-2 font-headline text-[10px] font-bold uppercase tracking-[0.18em] text-ink"
+        className="mt-4 inline-flex rounded-full bg-gold px-4 py-2 font-headline text-[10px] font-bold uppercase tracking-[0.18em] text-ink"
       >
         Open Exposure stats
       </a>
