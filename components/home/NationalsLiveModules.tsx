@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import { ExposureAttribution } from "@/components/home/ExposureAttribution";
 import type { HubAge, HubCircuitConfig } from "@/lib/hubConfig";
 import type { HubGame, NationalsHubPayload } from "@/lib/nationalsTypes";
 
@@ -352,6 +353,9 @@ export function NationalsLiveModules({
       <MatchupRadarBlock data={data} />
       <EfficiencyBlock data={data} />
       <StockWatchBlock data={data} />
+      <div className="mx-auto max-w-6xl px-4 pb-2 pt-1 sm:px-5">
+        <ExposureAttribution className="text-center" />
+      </div>
     </>
   );
 }

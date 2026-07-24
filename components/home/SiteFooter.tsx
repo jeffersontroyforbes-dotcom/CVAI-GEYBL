@@ -1,4 +1,6 @@
 /* eslint-disable @next/next/no-img-element -- static /public assets */
+import { ExposureAttribution } from "@/components/home/ExposureAttribution";
+
 export function SiteFooter() {
   return (
     <footer className="mt-8 border-t border-white/[0.08] bg-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
@@ -35,6 +37,7 @@ export function SiteFooter() {
           </span>
           <span className="mx-2 text-white/25">|</span>
           <span className="text-white/80">© {new Date().getFullYear()} CVAI</span>
+          <ExposureAttribution tone="dark" className="mt-3 text-center sm:text-right" />
         </div>
       </div>
     </footer>

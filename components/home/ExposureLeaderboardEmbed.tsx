@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ExposureAttribution } from "@/components/home/ExposureAttribution";
 import type { HubAge, HubCircuitConfig } from "@/lib/hubConfig";
 import { stripDivisionSuffix } from "@/lib/hubConfig";
 import type { ExposureStatisticsResponse, ExposureStatCategory } from "@/lib/exposure";
@@ -196,17 +197,7 @@ function LeaderboardGrid({
         </div>
       ) : null}
 
-      <p className="mt-5 text-center text-[10px] font-medium text-muted sm:mt-6 sm:text-[11px]">
-        Official statistics via{" "}
-        <a
-          href="https://basketball.exposureevents.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-semibold text-ink underline decoration-gold/50 underline-offset-2 hover:text-ink/80"
-        >
-          Exposure Basketball Events
-        </a>
-      </p>
+      <ExposureAttribution className="mt-5 text-center sm:mt-6" />
     </div>
   );
 }
