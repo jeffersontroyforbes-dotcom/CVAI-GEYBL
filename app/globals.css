@@ -35,7 +35,8 @@
   html[data-embed="true"] {
     overflow-x: clip;
     height: auto;
-    background-color: transparent;
+    /* Opaque field so Nike parent copy can't bleed through gaps */
+    background-color: #fafafa;
   }
 
   html[data-embed="true"] body {
@@ -44,7 +45,7 @@
     overflow-x: clip;
     overflow-y: visible;
     overscroll-behavior: none;
-    background-color: transparent;
+    background-color: #fafafa;
   }
 
   html[data-embed="true"] .site-chrome {
@@ -54,6 +55,7 @@
   html[data-embed="true"] .page-shell {
     padding-top: 0;
     padding-bottom: 0;
+    background-color: #fafafa;
   }
 
   html[data-embed="true"] .page-shell > main {
@@ -82,13 +84,27 @@
   }
 
   html[data-embed="true"] #leaders {
-    padding-top: 0.35rem;
+    padding-top: 0.75rem;
     padding-bottom: 0.85rem;
+    background-color: #fafafa;
   }
 
   html[data-embed="true"] #leaders h2 {
     font-size: 1.55rem;
     letter-spacing: 0.06em;
+    color: #000000;
+  }
+
+  html[data-embed="true"] .age-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    max-width: none;
+    width: 100%;
+    margin-inline: 0;
+    padding: 0.75rem 0.75rem 0.85rem;
+    background-color: #fafafa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
 
   html[data-embed="true"] #scoreboard .scoreboard-grid {
@@ -100,20 +116,6 @@
     border-left-width: 0;
     border-right-width: 0;
     --tw-ring-offset-color: transparent;
-  }
-
-  /* Age tabs: sticky strip inside the frame */
-  html[data-embed="true"] .age-tabs {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    max-width: none;
-    width: 100%;
-    margin-inline: 0;
-    padding: 0.75rem 0.75rem 0.85rem;
-    background-color: rgba(250, 250, 250, 0.97);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
   }
 
   html[data-embed="true"] .page-shell > main > section {
