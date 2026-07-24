@@ -1,6 +1,6 @@
 import { stripDivisionSuffix } from "./hubConfig";
 import type { ExposureStatisticsResponse } from "./exposure";
-import { exposureApiGet, mapOfficialStatistics } from "./exposureServer";
+import { exposureApiGet, fetchDivisionStatistics } from "./exposureServer";
 import type { HubGame, HubPool, NationalsHubPayload } from "./nationalsTypes";
 
 export type { HubGame, NationalsHubPayload } from "./nationalsTypes";
@@ -139,14 +139,18 @@ async function fetchLeaders(
   eventId: number,
   divisionId: number,
 ): Promise<ExposureStatisticsResponse> {
-  const payload = await exposureApiGet(
-    "/api/v1/statistics",
-    `?eventid=${eventId}&divisionid=${divisionId}&pagesize=50&categories=ppg,rpg,apg,spg,bpg,tpg`,
+  return fetchDivisionStatistics(eventId, divisionId);
+}
+
+function findLeaders(
+  leaders: ExposureStatisticsResponse,
+  abbr: string,
+) {
+  const target = abbr.toUpperCase();
+  return (
+    leaders.StatisticSummaries.find((c) => c.Abbr?.toUpperCase() === target)?.Value ??
+    []
   );
-  if (!payload) {
-    return { HasStatistics: false, StatisticSummaries: [] };
-  }
-  return mapOfficialStatistics(payload, eventId);
 }
 
 function buildWatch(
@@ -165,9 +169,10 @@ function buildWatch(
         : `Cross-pool look at ${game.time} on ${game.court}.`,
   }));
 
-  const ppg = leaders.StatisticSummaries.find((c) => c.Abbr === "PPG")?.Value ?? [];
-  const apg = leaders.StatisticSummaries.find((c) => c.Abbr === "APG")?.Value ?? [];
-  const spg = leaders.StatisticSummaries.find((c) => c.Abbr === "SPG")?.Value ?? [];
+  const ppg = findLeaders(leaders, "PPG");
+  const apg = findLeaders(leaders, "APG");
+  const spg = findLeaders(leaders, "SPG");
+  const rpg = findLeaders(leaders, "RPG");
 
   const hotHand = ppg.slice(0, 5).map((p) => ({
     name: p.Name,
@@ -187,23 +192,31 @@ function buildWatch(
           detail: `Opening tip ${g.time} · Pool ${g.home.pool || g.away.pool || "—"} · ${g.court}`,
         }));
 
-  const efficiency =
-    apg.length || spg.length
-      ? [
-          ...apg.slice(0, 2).map((p) => ({
-            name: p.Name,
-            team: stripDivisionSuffix(p.TeamName, divisionName),
-            value: p.Display,
-            label: "APG",
-          })),
-          ...spg.slice(0, 2).map((p) => ({
-            name: p.Name,
-            team: stripDivisionSuffix(p.TeamName, divisionName),
-            value: p.Display,
-            label: "SPG",
-          })),
-        ]
-      : [];
+  // Prefer playmaking / disruption; pad with RPG when APG/SPG thin
+  const efficiency = [
+    ...apg.slice(0, 2).map((p) => ({
+      name: p.Name,
+      team: stripDivisionSuffix(p.TeamName, divisionName),
+      value: p.Display,
+      label: "APG",
+    })),
+    ...spg.slice(0, 2).map((p) => ({
+      name: p.Name,
+      team: stripDivisionSuffix(p.TeamName, divisionName),
+      value: p.Display,
+      label: "SPG",
+    })),
+  ];
+  if (efficiency.length < 2) {
+    for (const p of rpg.slice(0, 4 - efficiency.length)) {
+      efficiency.push({
+        name: p.Name,
+        team: stripDivisionSuffix(p.TeamName, divisionName),
+        value: p.Display,
+        label: "RPG",
+      });
+    }
+  }
 
   return { matchups, stockUp, hotHand, efficiency };
 }

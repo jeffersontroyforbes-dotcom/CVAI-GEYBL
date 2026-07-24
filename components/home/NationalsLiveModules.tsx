@@ -285,9 +285,8 @@ function EfficiencyBlock({ data }: { data: NationalsHubPayload }) {
         ) : (
           <div className="px-4 py-8 text-center sm:px-6">
             <p className="text-sm text-muted">
-              Shooting efficiency (FG% / 3P% / FT%) will surface here when Exposure publishes those
-              categories. Until then we spotlight playmaking and disruption (APG / SPG) as they
-              populate.
+              Efficiency board fills from assists, steals, and rebounds as Exposure publishes those
+              leaders.
             </p>
           </div>
         )}

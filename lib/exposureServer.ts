@@ -2,6 +2,7 @@ import { createHmac } from "crypto";
 import {
   EXPOSURE_EVENT_ID,
   EXPOSURE_HOST,
+  EXPOSURE_STATISTICS_WIDGET_URL,
   type ExposureStatCategory,
   type ExposureStatLeader,
   type ExposureStatisticsResponse,
@@ -102,4 +103,53 @@ export function mapOfficialStatistics(
     HasStatistics: summaries.some((s) => s.Value.length > 0),
     StatisticSummaries: summaries,
   };
+}
+
+const STAT_CATEGORIES = "ppg,rpg,apg,spg,bpg,tpg";
+
+async function fetchViaWidget(
+  eventId: number,
+  divisionId: number,
+): Promise<ExposureStatisticsResponse> {
+  const url = `https://basketball.exposureevents.com/widgets/v1/statistics?id=${eventId}&categories=${STAT_CATEGORIES}`;
+  const response = await fetch(url || EXPOSURE_STATISTICS_WIDGET_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `divisionId=${divisionId}`,
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error("Exposure widget statistics unavailable");
+  }
+
+  return (await response.json()) as ExposureStatisticsResponse;
+}
+
+/**
+ * Same stats source as the Live Leaders board: official API, then widget fallback.
+ * Nationals modules (Hot Hand / Efficiency) must use this or they stay blank.
+ */
+export async function fetchDivisionStatistics(
+  eventId: number,
+  divisionId: number,
+): Promise<ExposureStatisticsResponse> {
+  try {
+    const payload = await exposureApiGet(
+      "/api/v1/statistics",
+      `?eventid=${eventId}&divisionid=${divisionId}&pagesize=50&categories=${STAT_CATEGORIES}`,
+    );
+    if (payload) {
+      const mapped = mapOfficialStatistics(payload, eventId);
+      if (mapped.HasStatistics) return mapped;
+    }
+  } catch {
+    // fall through to widget
+  }
+
+  try {
+    return await fetchViaWidget(eventId, divisionId);
+  } catch {
+    return { HasStatistics: false, StatisticSummaries: [] };
+  }
 }
