@@ -28,126 +28,171 @@
     box-sizing: border-box;
   }
 
-  /*
-   * Nike / GEYBL iframe: content-only surface (no site chrome).
-   * Triggered by iframe sniff or ?embed=1 — see EmbedDetect.
-   */
-  html[data-embed="true"] {
-    overflow-x: clip;
-    height: auto;
-    /* Opaque field so Nike parent copy can't bleed through gaps */
-    background-color: #fafafa;
-  }
-
-  html[data-embed="true"] body {
-    min-height: 0;
-    height: auto;
-    overflow-x: clip;
-    overflow-y: visible;
-    overscroll-behavior: none;
-    background-color: #fafafa;
-  }
-
-  html[data-embed="true"] .site-chrome {
-    display: none;
-  }
-
-  html[data-embed="true"] .page-shell {
-    padding-top: 0;
-    padding-bottom: 0;
-    background-color: #fafafa;
-  }
-
-  html[data-embed="true"] .page-shell > main {
-    min-width: 0;
-  }
-
-  /* Hero: match standalone mobile treatment (full-width poster, not a desktop card) */
-  html[data-embed="true"] #hub.hub-hero {
-    max-width: none;
-    width: 100%;
-    margin-inline: 0;
-    padding: 0.5rem 0.65rem 0.35rem;
-  }
-
-  html[data-embed="true"] #hub .hub-hero-frame {
-    width: 100%;
-    max-height: none;
-    border-radius: 1rem;
-    border-width: 1px;
-    box-shadow: none;
-  }
-
-  html[data-embed="true"] #hub .hub-hero-frame img {
-    object-fit: cover;
-    object-position: center top;
-  }
-
-  html[data-embed="true"] #leaders {
-    padding-top: 0.75rem;
-    padding-bottom: 0.85rem;
-    background-color: #fafafa;
-  }
-
-  html[data-embed="true"] #leaders h2 {
-    font-size: 1.55rem;
-    letter-spacing: 0.06em;
-    color: #000000;
-  }
-
-  html[data-embed="true"] .age-tabs {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    max-width: none;
-    width: 100%;
-    margin-inline: 0;
-    padding: 0.75rem 0.75rem 0.85rem;
-    background-color: #fafafa;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  html[data-embed="true"] #scoreboard .scoreboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  html[data-embed="true"] #hub a {
-    border-radius: 0;
-    border-left-width: 0;
-    border-right-width: 0;
-    --tw-ring-offset-color: transparent;
-  }
-
-  html[data-embed="true"] .page-shell > main > section {
-    max-width: none;
-    width: 100%;
-    margin-inline: 0;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-    padding-top: 0.75rem;
-    padding-bottom: 1.25rem;
-  }
-
-  html[data-embed="true"] .page-shell > main > section:first-of-type {
-    padding-top: 0.5rem;
-  }
-
-  html[data-embed="true"] .page-shell > footer {
-    margin-top: 0.25rem;
-  }
-
-  html[data-embed="true"] .page-shell > footer > div {
-    max-width: none;
-    padding-top: 1.25rem;
-    padding-bottom: 1.25rem;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-
   ::selection {
     background-color: rgba(255, 79, 1, 0.38);
     color: #000000;
   }
+}
+
+/*
+ * Nike / GEYBL iframe: content-only, full-bleed (no inset card / outline).
+ * Outside @layer so these beat Tailwind utilities (border, ring, rounded, shadow).
+ * Triggered by iframe sniff, ?embed=1, or /embed/* — see EmbedDetect.
+ */
+html[data-embed="true"] {
+  overflow-x: clip;
+  height: auto;
+  background-color: #fafafa;
+}
+
+html[data-embed="true"] body {
+  min-height: 0;
+  height: auto;
+  overflow-x: clip;
+  overflow-y: visible;
+  overscroll-behavior: none;
+  background-color: #fafafa;
+}
+
+html[data-embed="true"] .site-chrome {
+  display: none !important;
+}
+
+html[data-embed="true"] .page-shell {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  background-color: #fafafa;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+html[data-embed="true"] .page-shell > main {
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Hero: edge-to-edge — kill card outline / radius / ring */
+html[data-embed="true"] #hub.hub-hero {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html[data-embed="true"] #hub .hub-hero-frame {
+  width: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-width: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
+}
+
+html[data-embed="true"] #hub .hub-hero-frame img {
+  object-fit: cover;
+  object-position: center top;
+}
+
+html[data-embed="true"] #leaders {
+  padding-top: 0.75rem;
+  padding-bottom: 0.85rem;
+  background-color: #fafafa;
+}
+
+html[data-embed="true"] #leaders h2 {
+  font-size: 1.55rem;
+  letter-spacing: 0.06em;
+  color: #000000;
+}
+
+html[data-embed="true"] .age-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0.75rem 0.75rem 0.85rem;
+  background-color: #fafafa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+html[data-embed="true"] #scoreboard .scoreboard-grid {
+  grid-template-columns: 1fr;
+}
+
+html[data-embed="true"] .page-shell > main > section {
+  max-width: none !important;
+  width: 100% !important;
+  margin-inline: 0 !important;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 1.25rem;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+html[data-embed="true"] .page-shell > main > section:first-of-type {
+  padding-top: 0.5rem;
+}
+
+/* Live Leaders card: flush to edges in embed (no inset outline) */
+html[data-embed="true"] #leaders .leaders-board-card {
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+  width: calc(100% + 1.5rem);
+  max-width: none;
+  border-radius: 0 !important;
+  border-left: none !important;
+  border-right: none !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+}
+
+/* Contact card: full-bleed, no gold ring outline */
+html[data-embed="true"] #contact > div {
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+}
+
+html[data-embed="true"] .page-shell > footer {
+  margin-top: 0 !important;
+  border-radius: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+}
+
+html[data-embed="true"] .page-shell > footer > div {
+  max-width: none !important;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 
 @layer utilities {

@@ -39,7 +39,7 @@ export function LiveLeadersSection({ circuit, age }: LiveLeadersSectionProps) {
         </span>
       </div>
 
-      <div className="mt-5 overflow-hidden rounded-2xl border border-black/[0.14] bg-paper shadow-liftCard ring-1 ring-black/[0.06] sm:mt-6 sm:rounded-[1.25rem]">
+      <div className="leaders-board-card mt-5 overflow-hidden rounded-2xl border border-black/[0.14] bg-paper shadow-liftCard ring-1 ring-black/[0.06] sm:mt-6 sm:rounded-[1.25rem]">
         <div className="flex items-center justify-between gap-3 border-b border-black/[0.1] bg-gradient-to-r from-paper via-panel/60 to-paper px-4 py-4 sm:px-5 sm:py-4">
           <div className="flex min-w-0 items-center gap-3">
             <span className="relative flex h-2.5 w-2.5 shrink-0">
